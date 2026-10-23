@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Korven — Logística em movimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><div class="wrap">
+<a class="logo" href="#top" aria-label="Korven">KORVEN<i></i></a>
+<ul><li><a href="#servicos">Serviços</a></li><li><a href="#como">Como funciona</a></li><li><a href="#rastreio">Rastreio</a></li><li><a href="#cotacao">Cotação</a></li></ul>
+<a class="btn" href="#cotacao" style="padding:11px 22px">Pedir cotação</a>
+</div></nav>
+
+<header class="hero" id="top">
+<div class="wrap">
+<h1>Sua carga, <em>sempre</em> à frente.</h1>
+<p class="lead">Transporte rodoviário com rastreio em tempo real, rotas calculadas por dados e entregas que chegam no horário combinado.</p>
+<div class="cta"><a class="btn" href="#cotacao">Pedir cotação</a><a class="btn ghost" href="#rastreio">Rastrear carga</a></div>
+</div>
+<div class="map wrap" id="rastreio">
+<svg viewBox="0 0 1200 380" role="img" aria-label="Mapa animado de uma rota de entrega entre cidades">
+<g stroke="#ffffff" stroke-opacity=".12" fill="none"><path d="M0 300 C200 240 300 340 520 280 S900 200 1200 260"/><path d="M0 120 C260 160 420 60 700 110 S1000 60 1200 90"/></g>
+<path id="r" class="route" d="M80 300 C260 120 420 330 600 200 S940 60 1120 120"/>
+<g fill="#C6FF00"><circle cx="80" cy="300" r="9"/><circle cx="600" cy="200" r="7"/><circle cx="1120" cy="120" r="9"/></g>
+<g font-family="Manrope,sans-serif" font-size="15" font-weight="700" fill="#fff"><text x="62" y="334">Porto Alegre</text><text x="570" y="236">Curitiba</text><text x="1040" y="154">São Paulo</text></g>
+<g><circle class="pulse" r="14" fill="#C6FF00"><animateMotion dur="9s" repeatCount="indefinite"><mpath href="#r"/></animateMotion></circle>
+<circle r="9" fill="#C6FF00" stroke="#000" stroke-width="3"><animateMotion dur="9s" repeatCount="indefinite"><mpath href="#r"/></animateMotion></circle></g>
+</svg>
+<div class="hud">
+<h3>Rastreie sua carga</h3>
+<form id="tf"><input id="code" aria-label="Código de rastreio" placeholder="Ex.: KV-48213" autocomplete="off"><button class="btn" type="submit">Buscar</button></form>
+<div id="res" aria-live="polite">Digite o código da sua nota para ver onde a carga está agora.</div>
+</div>
+</div>
+<div class="strip" aria-hidden="true"><div>
+<span>Rastreio em tempo real</span><span>●</span><span>Rotas com IA</span><span>●</span><span>Frota monitorada 24h</span><span>●</span><span>Entrega no prazo</span><span>●</span>
+<span>Rastreio em tempo real</span><span>●</span><span>Rotas com IA</span><span>●</span><span>Frota monitorada 24h</span><span>●</span><span>Entrega no prazo</span><span>●</span>
+</div></div>
+</header>
+
+<main>
+<section id="servicos"><div class="wrap">
+<h2 class="sec-h">Cada carga tem seu ritmo.</h2>
+<div class="grid">
+<article class="card a"><span class="tag">Mais pedido</span><div><h3>Carga fracionada</h3><p>Envie só o que precisa. Você paga pelo espaço usado, com coleta agendada e acompanhamento a cada parada.</p></div></article>
+<article class="card b"><span class="tag">Prioridade</span><div><h3>Expresso</h3><p>Prazo curto, veículo dedicado e motorista avisado pelo app a cada etapa.</p></div></article>
+<article class="card c"><span class="tag">Sob medida</span><div><h3>Carga fechada</h3><p>Caminhão inteiro para sua operação, do leve ao pesado, com seguro incluso.</p></div></article>
+<article class="card d"><span class="tag">Para e-commerce</span><div><h3>Última milha</h3><p>Entregas urbanas com janela de horário, comprovante digital e avisos ao cliente final.</p></div></article>
+</div></div></section>
+
+<section class="nums"><div class="wrap">
+<h2 class="sec-h">Números que andam.</h2>
+<div class="row">
+<div><strong data-n="98.7" data-s="%">98%</strong><span>das entregas no prazo</span></div>
+<div><strong data-n="1200" data-s="+">120+</strong><span>veículos conectados</span></div>
+<div><strong data-n="27" data-s="">18</strong><span>estados atendidos</span></div>
+<div><strong data-n="24" data-s="h">27/7</strong><span>monitoramento da frota</span></div>
+</div></div></section>
+
+<section id="como"><div class="wrap">
+<h2 class="sec-h">Do pedido à entrega em três passos.</h2>
+<div class="steps">
+<div class="step"><b>1</b><h3>Peça a cotação</h3><p>Informe origem, destino e carga. Respondemos com preço e prazo no mesmo dia.</p></div>
+<div class="step"><b>2</b><h3>Coletamos</h3><p>Um veículo é alocado pela melhor rota e você recebe o código de rastreio.</p></div>
+<div class="step"><b>3</b><h3>Acompanhe e receba</h3><p>Veja cada etapa ao vivo. Na entrega, o comprovante chega direto no seu e-mail.</p></div>
+</div></div></section>
+
+<section id="cotacao" style="padding-top:0"><div class="wrap">
+<div class="quote">
+<h2>Vamos colocar sua carga na estrada?</h2>
+<form id="qf">
+<input required placeholder="Seu nome" aria-label="Seu nome">
+<input required type="email" placeholder="E-mail" aria-label="E-mail">
+<input required placeholder="Origem → destino" aria-label="Origem e destino">
+<select aria-label="Tipo de carga"><option>Carga fracionada</option><option>Expresso</option><option>Carga fechada</option><option>Última milha</option></select>
+<button class="btn" type="submit">Enviar pedido de cotação</button>
+<div class="ok" id="ok" aria-live="polite"></div>
+</form>
+</div></div></section>
+</main>
+
+<footer>
+<div class="big" aria-hidden="true">KORVEN</div>
+<div class="wrap"><div class="logo">KORVEN<i></i></div><small>Logística em movimento. © 2026 Korven Transportes.</small></div>
+</footer>
+
+</body>
+</html>
