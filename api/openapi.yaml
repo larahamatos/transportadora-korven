@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: Korven — API de integração para lojas
+  version: 1.0.0
+  description: |
+    Permite que lojas e clientes da Korven criem entregas a partir dos seus pedidos e acompanhem
+    o status e o histórico. Cada loja usa uma chave de API própria e só enxerga as próprias entregas.
+
+    Os dados seguem as tabelas `entrega`, `item` e `historico_entrega`
+    (ver `sistema/docs/modelo-de-dados.md`).
+servers:
+  - url: http://localhost:3000
+security:
+  - chaveBearer: []
+paths:
+  /saude:
+    get:
+      summary: Verifica se a API está no ar
+      security: []
+      responses:
+        "200":
+          description: API no ar
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+  /api/v1/entregas:
+    post:
+      summary: Cria uma entrega a partir de um pedido
+      description: |
+        Reenviar o mesmo `codigo_pedido_externo` da mesma loja não cria outra entrega:
+        a resposta é `200` com a entrega já existente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NovaEntrega" }
+      responses:
+        "201":
+          description: Entrega criada
+          headers:
+            Location:
+              description: URL da entrega criada
+              schema: { type: string, example: /api/v1/entregas/KV-476321 }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EntregaCompleta" }
+        "200":
+          description: Pedido já integrado anteriormente; devolve a entrega existente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EntregaCompleta" }
+        "400": { $ref: "#/components/responses/Erro" }
+        "401": { $ref: "#/components/responses/Erro" }
+        "413": { $ref: "#/components/responses/Erro" }
+        "415": { $ref: "#/components/responses/Erro" }
+        "422": { $ref: "#/components/responses/Erro" }
+        "429": { $ref: "#/components/responses/Erro" }
+    get:
+      summary: Lista as entregas da loja (mais recentes primeiro)
+      parameters:
+        - { name: codigo_pedido_externo, in: query, schema: { type: string } }
+        - name: status
+          in: query
+          schema: { $ref: "#/components/schemas/Status" }
+        - { name: limite, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { name: pagina, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+      responses:
+        "200":
+          description: Página de entregas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items: { $ref: "#/components/schemas/Entrega" }
+                  total: { type: integer }
+                  pagina: { type: integer }
+                  limite: { type: integer }
+        "401": { $ref: "#/components/responses/Erro" }
+        "422": { $ref: "#/components/responses/Erro" }
+        "429": { $ref: "#/components/responses/Erro" }
+  /api/v1/entregas/{codigo}:
+    get:
+      summary: Consulta uma entrega com itens e histórico
+      parameters:
+        - { name: codigo, in: path, required: true, schema: { type: string, example: KV-476321 } }
+      responses:
+        "200":
+          description: Entrega encontrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EntregaCompleta" }
+        "401": { $ref: "#/components/responses/Erro" }
+        "404": { $ref: "#/components/responses/Erro" }
+        "429": { $ref: "#/components/responses/Erro" }
+components:
+  securitySchemes:
+    chaveBearer:
+      type: http
+      scheme: bearer
+      description: "Chave da loja em `Authorization: Bearer <chave>`. O cabeçalho `X-API-Key` também é aceito."
+  responses:
+    Erro:
+      description: Erro. O campo `codigo` é estável e pode ser usado em tratamento automático.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Erro" }
+  schemas:
+    Status:
+      type: string
+      enum: [solicitada, coletada, saiu_cd, em_rodovia, na_cidade, saiu_entrega, entregue]
+    Item:
+      type: object
+      required: [descricao, quantidade, peso]
+      properties:
+        descricao: { type: string, maxLength: 150 }
+        quantidade: { type: integer, minimum: 1, maximum: 100000 }
+        peso: { type: number, exclusiveMinimum: 0, maximum: 100000, description: Peso em kg }
+    NovaEntrega:
+      type: object
+      required: [codigo_pedido_externo, nome_destinatario, endereco_origem, endereco_destino, itens]
+      properties:
+        codigo_pedido_externo: { type: string, maxLength: 60, example: LV-90417 }
+        nome_destinatario: { type: string, maxLength: 120, example: Marina Souza Almeida }
+        endereco_origem: { type: string, maxLength: 200, example: Porto Alegre/RS }
+        endereco_destino: { type: string, maxLength: 200, example: São Paulo/SP }
+        data_prevista:
+          type: string
+          format: date-time
+          description: Opcional. Deve ser futura. Sem ela, vale o prazo padrão da Korven (5 dias).
+        itens:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items: { $ref: "#/components/schemas/Item" }
+    Entrega:
+      type: object
+      properties:
+        codigo_rastreamento: { type: string, example: KV-476321 }
+        codigo_pedido_externo: { type: string }
+        nome_destinatario: { type: string }
+        endereco_origem: { type: string }
+        endereco_destino: { type: string }
+        data_solicitacao: { type: string, format: date-time }
+        data_prevista: { type: string, format: date-time }
+        data_conclusao: { type: string, format: date-time, nullable: true }
+        status: { $ref: "#/components/schemas/Status" }
+    Historico:
+      type: object
+      properties:
+        status_anterior: { type: string, nullable: true }
+        status_novo: { $ref: "#/components/schemas/Status" }
+        data_alteracao: { type: string, format: date-time }
+        observacao: { type: string, nullable: true }
+        usuario:
+          type: object
+          properties:
+            nome: { type: string }
+            perfil: { type: string, example: sistema }
+    EntregaCompleta:
+      type: object
+      properties:
+        entrega: { $ref: "#/components/schemas/Entrega" }
+        itens:
+          type: array
+          items: { $ref: "#/components/schemas/Item" }
+        historico:
+          type: array
+          items: { $ref: "#/components/schemas/Historico" }
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: object
+          properties:
+            codigo:
+              type: string
+              enum: [NAO_AUTENTICADO, VALIDACAO, JSON_INVALIDO, TIPO_NAO_SUPORTADO, CORPO_GRANDE, NAO_ENCONTRADO, ROTA_INEXISTENTE, LIMITE_EXCEDIDO, ERRO_INTERNO]
+            mensagem: { type: string }
+            detalhes:
+              type: array
+              items:
+                type: object
+                properties:
+                  campo: { type: string, example: "itens[0].peso" }
+                  mensagem: { type: string }

@@ -1,0 +1,21 @@
+{
+  "name": "korven-api-integracao",
+  "version": "1.0.0",
+  "description": "API de integração da Korven para lojas e clientes criarem e acompanharem entregas",
+  "private": true,
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "test": "node --test --no-warnings tests/*.test.js",
+    "gerar-chave": "node scripts/gerar-chave.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.1"
+  }
+}
