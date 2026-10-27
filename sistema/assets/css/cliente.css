@@ -169,6 +169,7 @@ body.cliente {
     --line-soft: rgba(13, 27, 18, 0.08);
     --surface-2: #fff;
     --accent: var(--forest);
+    --danger: #c2382b;
     --sk-brilho: rgba(15, 77, 42, 0.08);
 }
 

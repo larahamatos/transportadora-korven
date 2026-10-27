@@ -78,6 +78,8 @@ Korven.views["entregas"] = function (container, ctx) {
 
 3. Inclua o `<script>` nos shells que usam a tela (`app.html`, `motorista.html`, `cliente.html`), antes do JS do shell. Enquanto não houver view registrada, a rota exibe o quadro provisório.
 
+**Modelo pronto:** a lista de entregas (`assets/js/views/entregas.js` + `assets/css/entregas.css`, dados em `mock/entregas.js` via `Korven.api.listarEntregas`) é uma tela completa de exemplo. Copie-a para começar as outras.
+
 Convenções:
 
 - Rotas por hash: `#/painel`, `#/entregas`, `#/entregas/nova`. O menu e o acesso saem de `routes.js`.
