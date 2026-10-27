@@ -1,0 +1,151 @@
+/* ========================================
+   TELA DE EXEMPLO: LISTA DE ENTREGAS
+   Só variáveis do tema (--fg, --line, --accent…), por isso vale no escuro e no claro.
+======================================== */
+
+.ent-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.ent-busca {
+    flex: 1 1 260px;
+}
+
+.ent-filtro {
+    flex: 0 1 220px;
+}
+
+.ent-tools input,
+.ent-tools select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-2);
+    color: var(--fg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ent-tools input:focus,
+.ent-tools select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--line-soft);
+}
+
+.ent-conta {
+    margin: 18px 0 12px;
+    color: var(--grey);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ent-list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ent-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.8fr 1.4fr 0.8fr;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--line-soft);
+    border-radius: 20px;
+    background: var(--surface-2);
+    transition: border-color 0.2s, transform 0.25s var(--ease);
+    animation: subir 0.4s var(--ease) both;
+}
+
+.ent-row:hover {
+    border-color: var(--line);
+    transform: translateY(-2px);
+}
+
+.ent-row strong {
+    display: block;
+    font-size: 15px;
+}
+
+.ent-row small {
+    display: block;
+    color: var(--grey);
+    font-size: 13px;
+}
+
+.ent-cod strong {
+    font-family: var(--d);
+    font-size: 14px;
+    letter-spacing: -0.02em;
+}
+
+.ent-extra {
+    margin-top: 2px;
+    color: var(--muted);
+}
+
+.ent-st {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ent-badge {
+    padding: 4px 12px;
+    border: 1.5px solid var(--line);
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.st-saiu_entrega,
+.st-em_rodovia,
+.st-na_cidade {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.st-entregue {
+    border-color: transparent;
+    background: var(--green);
+    color: #000;
+}
+
+.st-atraso,
+.st-sem {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.ent-prazo {
+    text-align: right;
+}
+
+@media (max-width: 760px) {
+    .ent-row {
+        grid-template-columns: 1fr auto;
+        gap: 10px 12px;
+        padding: 16px;
+    }
+
+    .ent-quem {
+        grid-column: 1 / -1;
+        order: 3;
+    }
+
+    .ent-st {
+        grid-column: 1 / -1;
+        order: 4;
+    }
+
+    .ent-prazo {
+        order: 2;
+    }
+}

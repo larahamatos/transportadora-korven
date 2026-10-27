@@ -37,6 +37,38 @@ window.Korven = window.Korven || {};
             });
         },
 
+        // Entregas que o usuário pode ver. A regra de escopo é do banco (RLS); o mock só a imita:
+        // admin/operador veem tudo, motorista as atribuídas a ele, cliente as da própria loja.
+        // Cliente e motorista nunca recebem o nome um do outro. Supabase: select em entrega + joins.
+        listarEntregas: function (usuario) {
+            return esperar(ATRASO_MOCK).then(function () {
+                var perfil = usuario.perfil_acesso;
+
+                return Korven.mock.entregas.filter(function (x) {
+                    if (perfil === "motorista") {
+                        return x.motorista_usuario_id === usuario.id;
+                    }
+
+                    if (perfil === "cliente") {
+                        return x.cliente_usuario_id === usuario.id;
+                    }
+
+                    return true;
+                }).map(function (x) {
+                    return {
+                        codigo_rastreamento: x.codigo_rastreamento,
+                        codigo_pedido_externo: x.codigo_pedido_externo,
+                        nome_destinatario: x.nome_destinatario,
+                        endereco_destino: x.endereco_destino,
+                        status: x.status,
+                        data_prevista: x.data_prevista,
+                        cliente_nome: perfil === "cliente" ? null : x.cliente_nome,
+                        motorista_nome: perfil === "cliente" || perfil === "motorista" ? null : x.motorista_nome
+                    };
+                });
+            });
+        },
+
         // Encerra a sessão no servidor. Supabase: supabase.auth.signOut().
         sair: function () {
             return esperar(0);
