@@ -1,0 +1,214 @@
+/* ========================================
+   1. VARIÁVEIS E RESET
+   Mesma identidade da landing (../../style.css)
+======================================== */
+
+:root {
+    --lime: #C6FF00;
+    --green: #2E9E3F;
+    --forest: #0F4D2A;
+    --ink: #000;
+    --surface: #0b0d0b;
+    --surface-2: #121512;
+    --paper: #fff;
+    --fg: #fff;
+    --bg: #000;
+    --accent: var(--lime);
+    --grey: #9AA39B;
+    --muted: #cfd6cf;
+    --danger: #ff6b5e;
+    --line: rgba(255, 255, 255, 0.14);
+    --line-soft: rgba(255, 255, 255, 0.07);
+
+    --d: 'Unbounded', 'Arial Black', Impact, sans-serif;
+    --b: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    color-scheme: dark;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 16px/1.55 var(--b);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+    color: inherit;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0;
+    font-family: var(--d);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+
+/* ========================================
+   2. BOTÕES
+======================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 28px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--lime);
+    color: var(--ink);
+    font: 700 15px var(--b);
+    cursor: pointer;
+    transition: transform 0.2s var(--ease), background 0.2s, opacity 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: #fff;
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: progress;
+    transform: none;
+}
+
+.btn.ghost {
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--paper);
+}
+
+.btn.ghost:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+}
+
+.btn .spin {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(0, 0, 0, 0.25);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.btn.is-loading .spin {
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ========================================
+   3. ROTA ANIMADA (reaproveitada da landing)
+======================================== */
+
+.route {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 2.5;
+    stroke-dasharray: 6 10;
+    animation: dash 1.4s linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -32;
+    }
+}
+
+.pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(3.2);
+        opacity: 0;
+    }
+}
+
+
+/* ========================================
+   4. ACESSIBILIDADE: MOVIMENTO REDUZIDO
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Korven — Sistema</title>
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+    // Entrada do sistema: com sessão vai para o app; sem sessão, para o login.
+    var u = Korven.auth.usuario();
+
+    location.replace(u ? Korven.auth.destino(u.perfil_acesso) : "login.html");
+</script>
+</head>
+<body style="background:#000">
+<noscript><a href="login.html">Entrar</a></noscript>
+</body>
+</html>

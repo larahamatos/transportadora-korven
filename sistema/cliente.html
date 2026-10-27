@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F4D2A">
+<meta name="robots" content="noindex">
+<title>Korven — Área do cliente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@700;900&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/views.css">
+<link rel="stylesheet" href="assets/css/cliente.css">
+</head>
+<body class="boot cliente">
+
+<a class="skip" href="#view">Ir para o conteúdo</a>
+
+<div class="portal" id="app" data-hero="grande">
+
+    <header class="band">
+        <div class="wrap">
+            <div class="p-bar">
+                <a class="logo" href="#/" aria-label="Korven, início">
+                    <img src="../Logotipo%20K%20com%20Estrada%20Neon%20(2).png" alt="">
+                    <span>ORVEN</span>
+                </a>
+
+                <nav class="p-nav" id="nav" aria-label="Navegação principal"></nav>
+
+                <div class="user" id="user">
+                    <button class="user-btn" id="user-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+                        <span class="avatar" id="avatar"></span>
+                        <span class="user-info">
+                            <strong id="user-nome"></strong>
+                            <small id="user-perfil"></small>
+                        </span>
+                    </button>
+                    <div class="user-menu" id="user-menu" role="menu" hidden>
+                        <a role="menuitem" href="#/perfil" id="um-perfil"></a>
+                        <button role="menuitem" type="button" id="sair"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero">
+                <div class="hero-in">
+                    <span class="eyebrow" id="hero-eyebrow"></span>
+                    <h1 id="hero-titulo"></h1>
+                    <p id="hero-sub"></p>
+                    <a class="btn" id="hero-cta" href="#/entregas/nova"></a>
+                </div>
+
+                <svg class="hero-art" viewBox="0 0 520 260" aria-hidden="true">
+                    <path id="rota" class="route" d="M10 220 C110 60 210 250 300 140 S450 30 510 70"/>
+                    <g fill="#C6FF00"><circle cx="10" cy="220" r="8"/><circle cx="300" cy="140" r="6"/><circle cx="510" cy="70" r="8"/></g>
+                    <circle class="pulse" r="12" fill="#C6FF00"><animateMotion dur="8s" repeatCount="indefinite"><mpath href="#rota"/></animateMotion></circle>
+                    <circle r="8" fill="#C6FF00" stroke="#000" stroke-width="3"><animateMotion dur="8s" repeatCount="indefinite"><mpath href="#rota"/></animateMotion></circle>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="sheet">
+        <div class="wrap">
+            <main class="view" id="view" tabindex="-1"></main>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/mock/usuarios.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/routes.js"></script>
+<script src="assets/js/comum.js"></script>
+
+<!-- Telas: veja sistema/README.md. Adicione o <script> da sua tela aqui, antes do cliente.js. -->
+<script src="assets/js/views/placeholder.js"></script>
+
+<script src="assets/js/cliente.js"></script>
+</body>
+</html>
