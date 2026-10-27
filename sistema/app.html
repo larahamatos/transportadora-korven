@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Korven — Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@700;900&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/views.css">
+<link rel="stylesheet" href="assets/css/shell.css">
+</head>
+<body class="boot">
+
+<a class="skip" href="#view">Ir para o conteúdo</a>
+
+<div class="app" id="app">
+
+    <aside class="sidebar" id="sidebar" aria-label="Menu principal">
+        <div class="sb-top">
+            <a class="logo" href="#/" aria-label="Korven, início">
+                <img src="../Logotipo%20K%20com%20Estrada%20Neon%20(2).png" alt="">
+                <span>ORVEN</span>
+            </a>
+            <button class="icon-btn only-mobile" id="fechar-menu" type="button" aria-label="Fechar menu"></button>
+        </div>
+
+        <nav class="menu" id="menu"></nav>
+
+        <div class="sb-bottom">
+            <button class="collapse" id="recolher" type="button" aria-pressed="false">
+                <span class="collapse-ico"></span><span class="label">Recolher menu</span>
+            </button>
+        </div>
+    </aside>
+
+    <div class="scrim" id="scrim"></div>
+
+    <div class="main">
+        <header class="topbar">
+            <button class="icon-btn only-mobile" id="abrir-menu" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"></button>
+
+            <h1 class="page-title" id="titulo-pagina"></h1>
+
+            <div class="user" id="user">
+                <button class="user-btn" id="user-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+                    <span class="avatar" id="avatar"></span>
+                    <span class="user-info">
+                        <strong id="user-nome"></strong>
+                        <small id="user-perfil"></small>
+                    </span>
+                </button>
+                <div class="user-menu" id="user-menu" role="menu" hidden>
+                    <a role="menuitem" href="#/perfil" id="um-perfil"></a>
+                    <button role="menuitem" type="button" id="sair"></button>
+                </div>
+            </div>
+        </header>
+
+        <main class="view" id="view" tabindex="-1"></main>
+    </div>
+</div>
+
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/mock/usuarios.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/routes.js"></script>
+<script src="assets/js/comum.js"></script>
+
+<!-- Telas: cada arquivo em assets/js/views/ registra uma função em Korven.views.<id>.
+     Adicione o <script> da sua tela aqui, antes do app.js. Veja sistema/README.md. -->
+<script src="assets/js/views/placeholder.js"></script>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

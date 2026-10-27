@@ -1,0 +1,248 @@
+/* ========================================
+   SHELL DO MOTORISTA — app de celular, escuro, alvos de toque grandes
+======================================== */
+
+body.motorista {
+    background:
+        radial-gradient(700px 420px at 50% -10%, rgba(198, 255, 0, 0.14), transparent 60%),
+        linear-gradient(var(--line-soft) 1px, transparent 1px) 0 0 / 100% 64px,
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px) 0 0 / 64px 100%,
+        var(--ink);
+}
+
+/* No computador vira uma "coluna de celular" centralizada */
+.driver {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 520px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0 auto;
+    background: var(--surface);
+    border-inline: 1px solid var(--line-soft);
+}
+
+
+/* ---------- Topo ---------- */
+
+.d-top {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: max(14px, env(safe-area-inset-top, 0px)) 18px 14px;
+    background: linear-gradient(var(--surface) 72%, rgba(11, 13, 11, 0));
+}
+
+.mark img {
+    display: block;
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+
+.hello {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.hello small {
+    color: var(--grey);
+    font-size: 13px;
+}
+
+.hello strong {
+    overflow: hidden;
+    font: 900 20px/1.2 var(--d);
+    letter-spacing: -0.03em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.driver .user-btn {
+    padding: 3px;
+}
+
+.driver .avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+}
+
+
+/* ---------- Conteúdo ---------- */
+
+.driver .view {
+    flex: 1;
+    padding: 10px 18px 140px;
+    outline: none;
+}
+
+.driver .ph-title {
+    font-size: clamp(30px, 9vw, 40px);
+}
+
+.driver .ph-desc {
+    font-size: 16px;
+}
+
+.driver .ph-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.driver .sk-stat {
+    height: 96px;
+    border-radius: 22px;
+}
+
+.driver .sk-wide {
+    height: 180px;
+    border-radius: 22px;
+}
+
+
+/* ---------- Barra de abas ---------- */
+
+.tabbar {
+    position: fixed;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    width: min(calc(100% - 24px), 496px);
+    height: 68px;
+    padding: 0 8px;
+    transform: translateX(-50%);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: rgba(16, 19, 16, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.6);
+    animation: tab-sobe 0.6s var(--ease) both 0.2s;
+}
+
+.tab {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    flex: 1;
+    justify-items: center;
+    gap: 3px;
+    padding: 10px 0;
+    color: var(--grey);
+    font-size: 12px;
+    font-weight: 700;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab .icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s var(--ease);
+}
+
+.tab:active .icon {
+    transform: scale(0.88);
+}
+
+.tab.ativo {
+    color: var(--lime);
+}
+
+/* Brilho que desliza até a aba ativa */
+.ind {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 0;
+    width: 0;
+    border-radius: 20px;
+    background: rgba(198, 255, 0, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(198, 255, 0, 0.28);
+    opacity: 0;
+    transition: transform 0.4s var(--ease), width 0.4s var(--ease), opacity 0.2s;
+}
+
+/* Botão central: a ação principal do motorista */
+.fab {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    flex: none;
+    justify-items: center;
+    width: 84px;
+    gap: 2px;
+    color: var(--grey);
+    font-size: 11px;
+    font-weight: 700;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.fab .icon {
+    box-sizing: content-box;
+    width: 28px;
+    height: 28px;
+    margin-top: -30px;
+    padding: 15px;
+    border: 4px solid var(--surface);
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+    box-shadow: 0 10px 26px rgba(198, 255, 0, 0.3);
+    animation: fab-pulso 2.8s ease-out infinite;
+    transition: transform 0.25s var(--ease), background 0.2s;
+}
+
+.fab:hover .icon {
+    transform: translateY(-2px);
+}
+
+.fab:active .icon {
+    transform: scale(0.92);
+}
+
+.fab.ativo {
+    color: var(--lime);
+}
+
+.fab.ativo .icon {
+    background: #fff;
+}
+
+@keyframes fab-pulso {
+    0% {
+        box-shadow: 0 10px 26px rgba(198, 255, 0, 0.3), 0 0 0 0 rgba(198, 255, 0, 0.5);
+    }
+
+    70%,
+    100% {
+        box-shadow: 0 10px 26px rgba(198, 255, 0, 0.3), 0 0 0 16px rgba(198, 255, 0, 0);
+    }
+}
+
+@keyframes tab-sobe {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%);
+    }
+}
+
+/* O menu da conta abre para dentro da coluna */
+.driver .user-menu {
+    right: 0;
+}

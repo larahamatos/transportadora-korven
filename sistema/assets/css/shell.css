@@ -1,0 +1,332 @@
+/* ========================================
+   ESTRUTURA DO SISTEMA (menu, topo, área de conteúdo)
+======================================== */
+
+:root {
+    --sb: 264px;
+    --sb-mini: 76px;
+    --top: 68px;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: var(--sb) minmax(0, 1fr);
+    min-height: 100vh;
+    min-height: 100dvh;
+    transition: grid-template-columns 0.35s var(--ease);
+}
+
+.app.recolhido {
+    --sb: var(--sb-mini);
+}
+
+.icon-btn.only-mobile {
+    display: none;
+}
+
+/* ========================================
+   1. BARRA LATERAL
+======================================== */
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0 14px 16px;
+    overflow: hidden;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+}
+
+.sb-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--top);
+    padding: 0 6px;
+    flex: none;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    margin: 14px -14px 0;
+    padding: 0 14px;
+    overflow-y: auto;
+}
+
+.menu a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 46px;
+    padding: 0 14px;
+    border-radius: 14px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s, transform 0.25s var(--ease);
+    animation: entra-item 0.5s var(--ease) both;
+    animation-delay: calc(var(--i) * 45ms + 120ms);
+}
+
+.menu a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    transform: translateX(3px);
+}
+
+.menu a .icon {
+    transition: transform 0.25s var(--ease);
+}
+
+.menu a:hover .icon {
+    transform: scale(1.12);
+}
+
+.menu a.ativo {
+    background: rgba(198, 255, 0, 0.1);
+    color: var(--lime);
+    font-weight: 700;
+}
+
+.menu a::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 10px;
+    bottom: 10px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--lime);
+    box-shadow: 0 0 14px var(--lime);
+    transform: scaleY(0);
+    transition: transform 0.3s var(--ease);
+}
+
+.menu a.ativo::before {
+    transform: scaleY(1);
+}
+
+.sb-bottom {
+    flex: none;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-soft);
+}
+
+.collapse {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--grey);
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+}
+
+.collapse:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.collapse-ico {
+    display: grid;
+    transition: transform 0.35s var(--ease);
+}
+
+.recolhido .collapse-ico {
+    transform: rotate(180deg);
+}
+
+@keyframes entra-item {
+    from {
+        opacity: 0;
+        transform: translateX(-14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Menu recolhido (só ícones) */
+
+.recolhido .logo span,
+.recolhido .menu .label,
+.recolhido .collapse .label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.recolhido .sb-top {
+    justify-content: center;
+}
+
+.recolhido .logo {
+    width: 44px;
+    overflow: hidden;
+}
+
+.recolhido .menu a,
+.recolhido .collapse {
+    gap: 0;
+    justify-content: center;
+    padding: 0;
+}
+
+/* ========================================
+   2. ÁREA PRINCIPAL E TOPO
+======================================== */
+
+.main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: var(--top);
+    padding: 0 clamp(16px, 3vw, 36px);
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+}
+
+.page-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: clamp(16px, 2.2vw, 20px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.view {
+    flex: 1;
+    padding: clamp(20px, 3.4vw, 44px) clamp(16px, 3vw, 36px) 80px;
+    outline: none;
+}
+
+/* ========================================
+   3. RESPONSIVO
+======================================== */
+
+@media (max-width: 900px) {
+    .app,
+    .app.recolhido {
+        --sb: 0px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .icon-btn.only-mobile {
+        display: grid;
+    }
+
+    /* Menu vira gaveta */
+    .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(300px, 86vw);
+        transform: translateX(-102%);
+        transition: transform 0.35s var(--ease);
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .menu-aberto .sidebar {
+        transform: none;
+        box-shadow: 30px 0 80px rgba(0, 0, 0, 0.7);
+    }
+
+    .scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .menu-aberto .scrim {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* A gaveta nunca fica "recolhida" */
+    .recolhido .logo span,
+    .recolhido .menu .label {
+        opacity: 1;
+        width: auto;
+    }
+
+    .recolhido .logo {
+        width: auto;
+    }
+
+    .recolhido .menu a {
+        gap: 14px;
+        justify-content: flex-start;
+        padding: 0 14px;
+    }
+
+    .recolhido .sb-top {
+        justify-content: space-between;
+    }
+
+    .sb-bottom {
+        display: none;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .user-btn {
+        padding: 4px;
+    }
+
+    .ph-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sk-stat {
+        height: 90px;
+    }
+
+    .sk-wide {
+        height: 180px;
+    }
+}
+
+@media (min-width: 901px) {
+    .scrim {
+        display: none;
+    }
+}
