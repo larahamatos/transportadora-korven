@@ -28,6 +28,21 @@ O projeto está em desenvolvimento. Atualmente, conta com uma interface web inic
 
 > **Importante:** o rastreamento e o envio de cotações ainda são demonstrativos na interface atual. A conexão com dados reais e a persistência no banco de dados fazem parte das próximas etapas.
 
+## 🖼️ Telas
+
+### Site institucional
+
+<p align="center">
+  <img src="img/site-home.png" alt="Página inicial da Korven no desktop" width="720">
+  <img src="img/site-home-mobile.png" alt="Página inicial da Korven no celular" width="200">
+</p>
+
+### Sistema interno
+
+| Login | Lista de entregas (administrador) | Entregas do motorista (celular) |
+|---|---|---|
+| <img src="img/sistema-login.png" alt="Tela de login do sistema" width="360"> | <img src="img/sistema-entregas.png" alt="Lista de entregas no perfil de administrador" width="360"> | <img src="img/sistema-motorista.png" alt="Lista de entregas no perfil de motorista" width="180"> |
+
 ## 🛠️ Tecnologias utilizadas
 
 | Tecnologia | Finalidade |
