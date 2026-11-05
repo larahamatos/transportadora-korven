@@ -1,5 +1,5 @@
 // Partes compartilhadas pelos três shells (admin/operador, motorista, cliente):
-// menu do usuário, saudação e o roteador por hash. As telas são as mesmas em todos (Korven.views).
+// menu do usuário, saudação e o roteador por hash. As telas (assets/views/<id>/, ver telas.js) são as mesmas em todos.
 
 window.Korven = window.Korven || {};
 
@@ -84,6 +84,7 @@ window.Korven = window.Korven || {};
             var perfil = opcoes.usuario.perfil_acesso;
             var view = opcoes.view;
             var limpar = null;
+            var atual = 0;
 
             function renderizar() {
                 var id = location.hash.replace(/^#\/?/, "").replace(/\/$/, "");
@@ -112,13 +113,32 @@ window.Korven = window.Korven || {};
                     limpar = null;
                 }
 
+                var token = ++atual;
+
                 view.innerHTML = "";
                 // Reinicia a animação de entrada a cada troca de tela.
                 view.classList.remove("entra");
                 void view.offsetWidth;
                 view.classList.add("entra");
 
-                limpar = Korven.views[nome](view, { usuario: opcoes.usuario, perfil: perfil, rota: rota }) || null;
+                var ctx = { usuario: opcoes.usuario, perfil: perfil, rota: rota };
+
+                // Sem tela inline em Korven.views: tenta a pasta assets/views/<id>/ (html + css + js).
+                if (rota && !Korven.views[rota.id]) {
+                    Korven.carregarTela(rota.id).then(function (r) {
+                        if (token !== atual) {
+                            return;
+                        }
+                        view.innerHTML = r.html;
+                        limpar = (r.iniciar && r.iniciar(view, ctx)) || null;
+                    }).catch(function () {
+                        if (token === atual) {
+                            Korven.views._pendente(view, ctx);
+                        }
+                    });
+                } else {
+                    limpar = Korven.views[nome](view, ctx) || null;
+                }
 
                 document.title = titulo + " — Korven";
                 opcoes.aoTrocar(rota, titulo);

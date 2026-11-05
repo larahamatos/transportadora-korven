@@ -1,7 +1,7 @@
 // Mapa de telas do sistema, tirado de docs/telas-do-sistema.md.
 // É a ÚNICA fonte para menu, permissões de navegação e títulos: para criar uma tela, adicione uma linha aqui.
 //
-//   id        nome da rota (#/<id>) e da view em Korven.views[<id>]
+//   id        nome da rota (#/<id>); a tela fica em assets/views/<id>/ ("/" vira "-") e se registra com Korven.view(<id>, fn)
 //   titulo    título da página; "rotulo" troca o texto do menu por perfil
 //   icone     nome em icons.js
 //   perfis    quem pode abrir a rota
@@ -105,8 +105,7 @@ window.Korven = window.Korven || {};
             menu: ["motorista"],
             descricao: "Edição do nome e troca de senha. Motorista também edita disponibilidade e telefone."
         },
-        // ROTA DE EXEMPLO: o "id" daqui precisa ser IGUAL ao de Korven.views["exemplo"]
-        // em assets/js/views/exemplo.js. menu vazio = não aparece na barra, só pelo link #/exemplo.
+        // ROTA DE EXEMPLO: a tela está em assets/views/exemplo/ (html + css + js). menu vazio = só pelo link #/exemplo.
         {
             id: "exemplo",
             titulo: "Exemplo",

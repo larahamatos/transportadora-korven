@@ -1,5 +1,5 @@
 // Shell do cliente (loja): portal leve, navegação em pílulas no topo e boas-vindas no Painel.
-// Telas: Korven.views.
+// Telas: assets/views/ (telas.js).
 
 (function () {
     var usuario = Korven.auth.exigir(["cliente"]);

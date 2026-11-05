@@ -1,7 +1,9 @@
 // Telas provisórias: aparecem enquanto a tela real de cada rota não foi construída,
 // e também as telas de erro (sem acesso / não encontrada).
 //
-// Contrato de uma tela: Korven.views["<id>"] = function (container, ctx) { ... }
+// Telas reais ficam em assets/views/<id>/ (html + css + js), registradas com Korven.view(id, fn) — veja telas.js.
+// Este arquivo só traz as telas provisórias. Contrato de uma tela inline (forma antiga, ainda aceita):
+//   Korven.views["<id>"] = function (container, ctx) { ... }
 //   container  elemento <main> vazio onde a tela desenha o conteúdo
 //   ctx        { usuario, perfil, rota }
 // Pode devolver uma função de limpeza, chamada ao sair da tela.
@@ -30,13 +32,13 @@ Korven.views = Korven.views || {};
                 '</div>' +
                 '<div class="ph-note">' +
                     '<svg viewBox="0 0 200 12" aria-hidden="true"><path class="route" d="M0 6 H200"/></svg>' +
-                    '<p>Esta tela entra aqui. Crie <code></code> e registre <code>Korven.views["' + r.id + '"]</code>.</p>' +
+                    '<p>Esta tela entra aqui. Crie a pasta <code></code> com html, css e js.</p>' +
                 '</div>' +
             '</section>');
 
         container.querySelector(".ph-title").textContent = r.titulo;
         container.querySelector(".ph-desc").textContent = r.descricao;
-        container.querySelector(".ph-note code").textContent = "assets/js/views/" + r.id.replace("/", "-") + ".js";
+        container.querySelector(".ph-note code").textContent = "assets/views/" + r.id.replace("/", "-") + "/";
     };
 
     function erro(icone, titulo, texto) {

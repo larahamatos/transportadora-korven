@@ -1,5 +1,5 @@
 // Shell do motorista: pensado para celular, uso com uma mão. Barra de abas embaixo com o botão
-// central "Atualizar status" (a ação mais frequente). Telas: Korven.views.
+// central "Atualizar status" (a ação mais frequente). Telas: assets/views/ (telas.js).
 
 (function () {
     var usuario = Korven.auth.exigir(["motorista"]);

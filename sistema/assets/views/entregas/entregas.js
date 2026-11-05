@@ -1,10 +1,5 @@
-// TELA DE EXEMPLO — lista de entregas (rota #/entregas). Serve de modelo para as demais telas:
-//   1. registra Korven.views["<id da rota>"] = function (container, ctx)
-//   2. busca dados por Korven.api.*   (nunca direto do mock)
-//   3. monta o HTML com createElement/textContent (dado de fora nunca vai em innerHTML)
-//   4. usa as variáveis de cor do tema, assim funciona nos três shells (escuro e claro)
-// Doc da tela: docs/telas-do-sistema.md → "Entregas — lista".
-
+// Lista de entregas (#/entregas). Modelo das demais telas: entregas.html + entregas.css + este arquivo.
+// Dados por Korven.api.* ; texto vindo de dados entra por textContent.
 (function () {
     var STATUS = {
         solicitada: "Solicitada",
@@ -91,35 +86,21 @@
         return li;
     }
 
-    Korven.views["entregas"] = function (container, ctx) {
+    Korven.view("entregas", function (container, ctx) {
         var perfil = ctx.perfil;
         var mostrarCliente = perfil === "admin" || perfil === "operador";
         var mostrarMotorista = mostrarCliente;
         var dados = [];
         var vivo = true; // evita desenhar se o usuário já saiu da tela
 
-        // Esqueleto fixo: cabeçalho, filtros e lista (preenchida abaixo)
-        container.innerHTML =
-            '<section class="ent">' +
-                '<div class="ent-tools">' +
-                    '<label class="ent-busca"><span class="sr-only">Buscar</span>' +
-                        '<input type="search" placeholder="Buscar por código ou pedido" autocomplete="off"></label>' +
-                    '<label class="ent-filtro"><span class="sr-only">Status</span><select></select></label>' +
-                '</div>' +
-                '<p class="ent-conta" aria-live="polite"></p>' +
-                '<ul class="ent-list"></ul>' +
-            '</section>';
-
         var busca = container.querySelector("input");
         var filtro = container.querySelector("select");
         var conta = container.querySelector(".ent-conta");
         var lista = container.querySelector(".ent-list");
 
-        var opcoes = [["", "Todos os status"]].concat(Object.keys(STATUS).map(function (k) {
+        [["", "Todos os status"]].concat(Object.keys(STATUS).map(function (k) {
             return [k, STATUS[k]];
-        }));
-
-        opcoes.forEach(function (o) {
+        })).forEach(function (o) {
             var op = el("option", "", o[1]);
 
             op.value = o[0];
@@ -164,21 +145,18 @@
         conta.textContent = "Carregando entregas…";
 
         Korven.api.listarEntregas(ctx.usuario).then(function (r) {
-            if (!vivo) {
-                return;
+            if (vivo) {
+                dados = r;
+                desenhar();
             }
-
-            dados = r;
-            desenhar();
         }).catch(function (err) {
             if (vivo) {
                 conta.textContent = err.message || "Não foi possível carregar as entregas.";
             }
         });
 
-        // Função de limpeza: o roteador a chama ao sair da tela.
         return function () {
             vivo = false;
         };
-    };
+    });
 })();
