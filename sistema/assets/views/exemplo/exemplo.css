@@ -1,0 +1,16 @@
+/* CSS da tela: carregado uma vez ao abrir a tela. Prefixo .ex- evita conflito com outras telas.
+   As variáveis (--accent, --grey, --surface-2...) vêm do base.css. */
+.ex-titulo { margin: 0 0 4px; font-family: var(--d); font-size: 22px; }
+.ex-sub { margin: 0 0 24px; color: var(--grey); }
+
+.ex-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.ex-card { padding: 20px; border: 1px solid var(--line-soft); border-radius: 20px; background: var(--surface-2); }
+.ex-card small { display: block; color: var(--grey); font-weight: 700; }
+.ex-card strong { display: block; margin-top: 6px; font-family: var(--d); font-size: 34px; color: var(--accent); }
+.ex-card.alerta strong { color: var(--danger); }
+
+.ex-lista { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.ex-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border: 1px solid var(--line-soft); border-radius: 18px; background: var(--surface-2); }
+.ex-item strong { display: block; }
+.ex-item small { color: var(--grey); }
+.ex-badge { padding: 4px 12px; border: 1.5px solid var(--accent); border-radius: 99px; color: var(--accent); font-size: 12px; font-weight: 700; white-space: nowrap; }

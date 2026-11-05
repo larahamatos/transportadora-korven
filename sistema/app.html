@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/views.css">
-<link rel="stylesheet" href="assets/css/entregas.css">
 <link rel="stylesheet" href="assets/css/shell.css">
 </head>
 <body class="boot">
@@ -71,13 +70,12 @@
 <script src="assets/js/api.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/routes.js"></script>
+<script src="assets/js/telas.js"></script>
 <script src="assets/js/comum.js"></script>
 
-<!-- Telas: cada arquivo em assets/js/views/ registra uma função em Korven.views.<id>.
-     Adicione o <script> da sua tela aqui, antes do app.js. Veja sistema/README.md. -->
+<!-- Telas: ficam em assets/views/<id>/ (html + css + js) e são carregadas sozinhas pelo telas.js; não precisam de <script> aqui.
+     O placeholder.js traz só as telas provisórias e de erro. Veja sistema/README.md. -->
 <script src="assets/js/views/placeholder.js"></script>
-<script src="assets/js/views/entregas.js"></script>
-<script src="assets/js/views/exemplo.js"></script>
 
 <script src="assets/js/app.js"></script>
 </body>

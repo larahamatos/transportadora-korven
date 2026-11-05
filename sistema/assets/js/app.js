@@ -1,5 +1,5 @@
 // Shell de admin e operador: menu lateral por perfil, topo com usuário e gaveta no celular.
-// Motorista e cliente têm shells próprios (motorista.js, cliente.js). Telas: Korven.views.
+// Motorista e cliente têm shells próprios (motorista.js, cliente.js). Telas: assets/views/ (telas.js).
 
 (function () {
     var usuario = Korven.auth.exigir(["admin", "operador"]);

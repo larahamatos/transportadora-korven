@@ -1,7 +1,7 @@
 # Sistema interno Korven — front-end
 
-Base do sistema interno: **login, uma estrutura própria para cada perfil, rotas e casca das telas**. As telas em si ainda não existem; cada uma
-mostra um quadro "Em construção" até receber o conteúdo. Telas, perfis e dados de cada uma estão em
+Base do sistema interno: **login, uma estrutura própria para cada perfil, rotas e casca das telas**. As telas entram uma a uma; enquanto uma não existe,
+ela mostra um quadro "Em construção" até receber o conteúdo. Telas, perfis e dados de cada uma estão em
 [../docs/telas-do-sistema.md](../docs/telas-do-sistema.md).
 
 HTML, CSS e JS puros, sem build — a mesma stack da landing. Abra com qualquer servidor estático:
@@ -57,28 +57,37 @@ sistema/
       ├─ comum.js        o que os shells dividem: menu do usuário, saudação e roteador por hash
       ├─ app.js · motorista.js · cliente.js   um por shell
       ├─ login.js
+      ├─ telas.js        carregador das telas em pasta + helper Korven.view(...)
       ├─ mock/           dados de demonstração
-      └─ views/          uma tela por arquivo (placeholder.js traz as provisórias)
+      └─ views/          só placeholder.js (telas provisórias e de erro)
+   └─ views/             uma pasta por tela: <id>/<id>.html · <id>.css · <id>.js
 ```
 
 ## Como criar uma tela
 
+Cada tela é uma pasta em `assets/views/<id>/` com três arquivos de mesmo nome: HTML (estrutura), CSS (estilo) e JS (comportamento).
+
 1. A rota já existe em `assets/js/routes.js` (perfis, ícone e menu). Para uma tela nova, adicione uma linha lá.
-2. Crie `assets/js/views/<id>.js` (`entregas/nova` → `entregas-nova.js`):
+2. Crie a pasta com o **id da rota** (a barra vira hífen: `entregas/nova` → `assets/views/entregas-nova/entregas-nova.html` etc.).
+3. No JS, registre o comportamento com o helper `Korven.view` (o id é o da rota, com a barra):
 
 ```js
-Korven.views["entregas"] = function (container, ctx) {
-    // ctx = { usuario, perfil, rota }
-    container.innerHTML = "<h2>Entregas</h2>";
+Korven.view("entregas/nova", function (container, ctx) {
+    // container já contém o entregas-nova.html; ctx = { usuario, perfil, rota }
 
     // opcional: devolva uma função de limpeza (timers, listeners)
     return function () {};
-};
+});
 ```
 
-3. Inclua o `<script>` nos shells que usam a tela (`app.html`, `motorista.html`, `cliente.html`), antes do JS do shell. Enquanto não houver view registrada, a rota exibe o quadro provisório.
+Pronto: não há `<script>` para incluir nos shells. O roteador (via `telas.js`) busca os três arquivos na primeira visita à tela.
+Só o `.html` é obrigatório; sem `.css` ou `.js` a tela abre igual. Sem o `.html`, a rota exibe o quadro "Em construção".
+Precisa de servidor (usa `fetch`), como o resto do sistema.
 
-**Modelo pronto:** a lista de entregas (`assets/js/views/entregas.js` + `assets/css/entregas.css`, dados em `mock/entregas.js` via `Korven.api.listarEntregas`) é uma tela completa de exemplo. Copie-a para começar as outras.
+**Modelos:** `assets/views/exemplo/` (simples e comentado, abre em `#/exemplo`) e `assets/views/entregas/` (lista completa com busca, filtro e dados por `Korven.api.listarEntregas`). Copie uma das pastas para começar.
+
+Prefixe as classes do CSS (`.ex-`, `.ent-`) para o estilo de uma tela não afetar as outras.
+A forma antiga (`Korven.views["id"] = function (container, ctx) {…}` com `<script>` nos shells) continua funcionando e tem prioridade sobre a pasta.
 
 Convenções:
 
