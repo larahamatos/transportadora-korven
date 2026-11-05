@@ -104,6 +104,16 @@ window.Korven = window.Korven || {};
             perfis: TODOS,
             menu: ["motorista"],
             descricao: "Edição do nome e troca de senha. Motorista também edita disponibilidade e telefone."
+        },
+        // ROTA DE EXEMPLO: o "id" daqui precisa ser IGUAL ao de Korven.views["exemplo"]
+        // em assets/js/views/exemplo.js. menu vazio = não aparece na barra, só pelo link #/exemplo.
+        {
+            id: "exemplo",
+            titulo: "Exemplo",
+            icone: "painel",
+            perfis: TODOS,
+            menu: [],
+            descricao: "Tela de exemplo simples e comentada, para copiar ao criar uma tela nova."
         }
     ];
 
