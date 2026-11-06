@@ -6,24 +6,26 @@ Contrato completo em [openapi.yaml](openapi.yaml); formato dos dados em
 
 Node.js 20.6+ (testado no 24) e Express.
 
-> **Sem banco por enquanto.** O banco será criado por outra pessoa da equipe. Até lá, as entregas ficam em memória
-> (somem ao reiniciar) e as lojas autorizadas vêm do `.env`. A API já está separada para a troca: só os dois arquivos de
-> `src/repositories/` falam com dados (veja "Ligando ao banco").
+> **Usa o banco Supabase** (`../docs/banco-de-dados.md`). As lojas são as integrações criadas na tela "Integrações de API"
+> do sistema; o token que ela mostra (`chave.segredo`, uma única vez) é a chave desta API. Sem `SUPABASE_URL` e
+> `SUPABASE_ANON_KEY` no `.env`, a API cai no modo em memória (só para desenvolvimento e testes).
 
 ## Como rodar
 
 ```bash
 cd api
 npm install
-npm run gerar-chave -- "LojaVerde"   # imprime a chave da loja e a linha para o .env
-cp .env.example .env                 # cole a linha no CLIENTES= (várias lojas separadas por vírgula)
-npm start                            # http://localhost:3000
-npm test                             # testes de ponta a ponta
+cp .env.example .env     # já traz a URL e a chave pública do projeto Supabase
+npm start                # http://localhost:3000
+npm test                 # testes de ponta a ponta (modo em memória, sem rede)
 ```
+
+Para criar a chave de uma loja: entre no sistema, abra **Integrações de API**, crie uma integração e copie o token.
+No modo em memória, use `npm run gerar-chave -- "LojaVerde"` e a variável `CLIENTES` do `.env`.
 
 ## Uso
 
-Toda chamada em `/api/v1` envia a chave: `Authorization: Bearer <chave>` (ou `X-API-Key: <chave>`).
+Toda chamada em `/api/v1` envia o token da loja: `Authorization: Bearer <chave>.<segredo>` (ou `X-API-Key: <chave>.<segredo>`).
 
 ```bash
 # cria a entrega do pedido (201). Reenviar o mesmo pedido devolve a existente (200).
@@ -62,7 +64,7 @@ Erros seguem sempre `{ "erro": { "codigo", "mensagem", "detalhes"? } }`:
 - `codigo_pedido_externo` é único por loja: a criação é idempotente, inclusive com requisições simultâneas.
 - Sem `data_prevista`, vale o prazo padrão (`PRAZO_PADRAO_DIAS`, 5 dias). Se enviada, precisa ser futura.
 - Limites: 120 requisições/min por chave e 10 tentativas inválidas/min por IP (ajustáveis no `.env`).
-- A chave só aparece quando é gerada; o servidor guarda apenas o hash SHA-256.
+- O segredo só aparece quando é gerado; o banco guarda apenas o hash SHA-256. Integração inativa responde `401`.
 
 ## Estrutura
 
@@ -73,27 +75,19 @@ api/
 │  ├─ app.js · server.js · config.js · errors.js
 │  ├─ routes/               rotas HTTP
 │  ├─ services/             regras de negócio
-│  ├─ repositories/         ÚNICO lugar que acessa dados (hoje em memória)
+│  ├─ repositories/         ÚNICO lugar que acessa dados: supabase.js (produção) e em memória (testes)
 │  ├─ validators/           validação de entrada
 │  └─ middlewares/          autenticação, limite de uso, erros
 └─ tests/                   testes de ponta a ponta
 ```
 
-## Ligando ao banco
+## Como a API fala com o banco
 
-Reescreva só `src/repositories/clientes.js` e `src/repositories/entregas.js` mantendo os métodos documentados no topo
-de cada arquivo, e passe-os ao `criarApp` em `src/server.js`. Serviços, rotas e testes continuam iguais.
-
-O que o banco precisa oferecer à integração, além das tabelas `entrega`, `item` e `historico_entrega`:
-
-- **Clientes (lojas)** com nome, hash SHA-256 da chave de API e indicador de ativo.
-- **`entrega` ligada ao cliente** que a criou, para que cada loja enxergue só as suas.
-- **Unicidade de `codigo_rastreamento`** e de **`(cliente, codigo_pedido_externo)`**. Ao violar qualquer uma,
-  o repositório deve lançar `ConflitoUnico("<campo>")` (veja `src/errors.js`): é isso que gera um código novo em caso de
-  colisão e torna a criação idempotente.
-- **Criação atômica**: entrega, itens e o primeiro registro do histórico (`solicitada`, usuário "Integração <loja>",
-  perfil `sistema`) na mesma transação.
-- Se o histórico guardar o usuário como chave estrangeira, o repositório deve devolver `usuario: { nome, perfil }`.
+`src/repositories/supabase.js` chama funções `api_*` do banco (`api_autenticar`, `api_criar_entrega`,
+`api_detalhe_entrega`, `api_listar_entregas`) usando só a chave pública. Cada função recebe o token da loja, confere o
+hash e só enxerga as entregas dela. A criação é atômica (entrega, itens e 1º histórico, com usuário "Integração Korven"
+de perfil `sistema`) e a unicidade de código e de pedido vira `ConflitoUnico`, o que mantém a criação idempotente.
+Cada chamada autenticada atualiza `data_ultima_utilizacao` da integração (no máximo uma vez por minuto).
 
 ## Antes de ir para produção
 

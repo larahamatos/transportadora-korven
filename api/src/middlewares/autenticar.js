@@ -1,7 +1,7 @@
 // autenticação por chave de API
 //
 // A loja envia "Authorization: Bearer <chave>" (ou o cabeçalho "X-API-Key").
-// Comparamos o SHA-256 da chave com o hash guardado; a chave em si nunca fica no banco.
+// O repositório de clientes confere a chave (hash SHA-256); a chave em si nunca fica guardada.
 // Tentativas inválidas são limitadas por IP para dificultar adivinhação.
 
 const crypto = require("node:crypto");
@@ -21,7 +21,7 @@ function lerChave(req) {
 function autenticar(clientes, config) {
     const falhas = new Map();
 
-    return function (req, res, next) {
+    return async function (req, res, next) {
         const agora = Date.now();
         const ip = req.ip;
         const f = falhas.get(ip);
@@ -37,7 +37,7 @@ function autenticar(clientes, config) {
         }
 
         const chave = lerChave(req);
-        const cliente = chave ? clientes.buscarAtivoPorHash(hashDaChave(chave)) : null;
+        const cliente = chave ? await clientes.autenticar(chave) : null;
 
         if (!cliente) {
             const r = atual || { n: 0, inicio: agora };

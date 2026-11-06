@@ -1,7 +1,7 @@
 # Sistema Korven — Telas e acessos
 
 Guia para o front-end do sistema interno: o que cada tela faz, quem acessa e quais dados usa (`tabela.campo`).
-**L** = só leitura · **E** = grava · ✅ já feita.
+**L** = só leitura · **E** = grava · ✅ já feita. Todas as telas abaixo estão implementadas em `sistema/`.
 
 ## Perfis
 
@@ -151,6 +151,6 @@ Só avança para o próximo. Cada mudança grava em `historico_entrega`; ao entr
 
 ## Referências
 
-- Estrutura e convenções do front: `sistema/README.md` · contrato da tela de histórico: `sistema/docs/modelo-de-dados.md`.
-- API de integração das lojas: `api/README.md`. Enquanto o back-end do sistema interno não existe, o front usa dados de
-  demonstração (`sistema/assets/js/mock/`) acessados por `Korven.api.*`.
+- Banco, regras e segurança: `docs/banco-de-dados.md` · front-end: `sistema/README.md` · contrato da tela de histórico:
+  `sistema/docs/modelo-de-dados.md`.
+- API de integração das lojas: `api/README.md`.

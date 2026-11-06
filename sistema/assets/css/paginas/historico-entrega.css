@@ -1,0 +1,957 @@
+
+/* ========================================
+   PÁGINA: HISTÓRICO E RASTREAMENTO DE ENTREGA
+======================================== */
+
+/* ========================================
+   1. ENTREGAS RECENTES
+======================================== */
+
+.dv-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dv {
+    display: grid;
+    gap: 1px;
+    padding: 8px 18px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+}
+
+.dv:hover {
+    border-color: var(--line-2);
+}
+
+.dv[aria-pressed="true"] {
+    border-color: var(--lime);
+    background: rgba(198, 255, 0, 0.07);
+}
+
+.dv b {
+    font: 700 12px/1.3 var(--d);
+    letter-spacing: -0.02em;
+}
+
+.dv small {
+    color: var(--grey);
+    font-size: 12px;
+}
+
+
+/* ========================================
+   2. ESTRUTURA EM DUAS COLUNAS
+======================================== */
+
+.cols {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    align-items: start;
+    gap: 48px;
+}
+
+
+/* ========================================
+   3. RESUMO DA ENTREGA
+======================================== */
+
+.sum {
+    position: sticky;
+    top: calc(var(--top) + 24px);
+    display: grid;
+    gap: 22px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.035);
+    transition: opacity 0.35s;
+}
+
+.sum-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.sum-code {
+    color: var(--lime);
+    font: 700 18px var(--d);
+    letter-spacing: -0.03em;
+}
+
+.sum-to {
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sum-ped {
+    color: var(--grey);
+    font-size: 13px;
+}
+
+/* percurso: origem → destino, uma bolinha por status */
+
+.rt-ends {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.rt-ends span {
+    min-width: 0;
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rt-ends span:last-child {
+    text-align: right;
+}
+
+.rt-line {
+    position: relative;
+    margin: 14px 0 12px;
+}
+
+.rt-line::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    left: 6px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-50%);
+}
+
+.rt-bar {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    width: calc((100% - 12px) * var(--p, 0));
+    height: 2px;
+    background: var(--lime);
+    transform: translateY(-50%);
+    transition: width 1.2s var(--ease);
+}
+
+.rt-steps {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rt-steps li {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    background: var(--ink);
+    transition: background 0.4s, border-color 0.4s, transform 0.4s var(--ease), box-shadow 0.4s;
+}
+
+.rt-steps li.on {
+    border-color: var(--lime);
+    background: var(--lime);
+}
+
+.rt-steps li.now {
+    box-shadow: 0 0 0 4px rgba(198, 255, 0, 0.2);
+}
+
+.rt-steps li.act {
+    transform: scale(1.4);
+}
+
+.rt-info {
+    color: var(--soft);
+    font-size: 13px;
+}
+
+.rt-info b {
+    color: #fff;
+}
+
+.met {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 18px;
+}
+
+.met dt {
+    color: var(--grey);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.met dd {
+    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.sla {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.sla i {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 4px rgba(46, 158, 63, 0.2);
+}
+
+.sla[data-s="late"] {
+    color: var(--amber);
+}
+
+.sla[data-s="late"] i {
+    background: var(--amber);
+    box-shadow: 0 0 0 4px rgba(255, 176, 32, 0.2);
+}
+
+.load summary {
+    color: var(--soft);
+    font-size: 13px;
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+}
+
+.load summary::-webkit-details-marker {
+    display: none;
+}
+
+.load summary::before {
+    content: "+";
+    display: inline-block;
+    width: 18px;
+    color: var(--lime);
+    transition: transform 0.3s var(--ease);
+}
+
+.load[open] summary::before {
+    transform: rotate(45deg);
+}
+
+.load ul {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.load li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--soft);
+    font-size: 13px;
+}
+
+.load li span {
+    color: var(--grey);
+    white-space: nowrap;
+}
+
+.acts {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+
+.acts .link {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 4px;
+}
+
+
+/* ========================================
+   4. O FIO DA ROTA (LINHA DO TEMPO)
+======================================== */
+
+.fio {
+    position: relative;
+    padding: 50px 0 140px;
+    transition: opacity 0.35s;
+}
+
+.swap .fio,
+.swap .sum {
+    opacity: 0;
+}
+
+.fio-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(#000 calc(100% - 180px), transparent);
+    mask-image: linear-gradient(#000 calc(100% - 180px), transparent);
+}
+
+.fio-list {
+    position: relative;
+    z-index: 1;
+}
+
+.f-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-dasharray: 1 9;
+}
+
+.f-halo {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 16;
+    stroke-linecap: round;
+    opacity: 0.1;
+}
+
+.f-real {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 3.4;
+    stroke-linecap: round;
+}
+
+.f-real2 {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 3.4;
+    stroke-linecap: round;
+}
+
+.f-comet {
+    fill: none;
+    stroke: #fff;
+    stroke-linecap: round;
+}
+
+.f-pulse {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 5;
+    stroke-linecap: round;
+}
+
+.fio-svg.ahead .f-comet {
+    opacity: 0;
+}
+
+/* ligação nó → cartão */
+
+.f-tb {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1.4;
+    stroke-dasharray: 2 5;
+}
+
+.f-ta {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 1.8;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0.7;
+    transition: stroke-dashoffset 0.9s var(--ease) 0.15s;
+}
+
+.f-t.on .f-ta {
+    stroke-dashoffset: 0;
+}
+
+/* nós */
+
+.node {
+    color: rgba(255, 255, 255, 0.42);
+    cursor: pointer;
+    pointer-events: auto;
+    outline: none;
+}
+
+.n-ring {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 1.4;
+    stroke-dasharray: 3 6;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: stroke 0.4s;
+}
+
+.n-glow {
+    fill: var(--lime);
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.n-disc {
+    fill: #0a110c;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+    transition: fill 0.4s, stroke 0.4s;
+}
+
+.n-ico {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.n-ico path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.node.lit {
+    color: #050806;
+}
+
+.node.lit .n-disc {
+    fill: var(--lime);
+    stroke: var(--lime);
+    stroke-dasharray: none;
+}
+
+.node.lit .n-glow {
+    opacity: 0.16;
+}
+
+.node.lit .n-ring {
+    stroke: rgba(198, 255, 0, 0.5);
+}
+
+.node.lit .n-ico {
+    animation: pop 0.7s var(--ease);
+}
+
+.node.now .n-ring {
+    animation: spin 14s linear infinite;
+}
+
+.node.now .n-glow {
+    opacity: 0.22;
+}
+
+.node.act .n-ring {
+    stroke: #fff;
+}
+
+.node:hover .n-disc,
+.node:focus-visible .n-disc {
+    stroke: #fff;
+}
+
+.n-rip {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ripple 1.3s var(--ease) both;
+    pointer-events: none;
+}
+
+.n-son {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 2;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    pointer-events: none;
+}
+
+.node.now .n-son {
+    animation: sonar 2.4s ease-out infinite;
+}
+
+.node.now .n-son + .n-son {
+    animation-delay: 1.2s;
+}
+
+/* lente: cursor que desliza pelo fio enquanto a página rola */
+
+.lens-r {
+    fill: rgba(5, 8, 6, 0.4);
+    stroke: #fff;
+    stroke-width: 1.8;
+}
+
+.lens-d {
+    fill: #fff;
+}
+
+.lens.ghost .lens-r {
+    stroke: var(--amber);
+    stroke-dasharray: 3 3;
+}
+
+.lens.ghost .lens-d {
+    fill: var(--amber);
+}
+
+
+/* ========================================
+   5. CARTÕES DE EVENTO
+======================================== */
+
+.ev {
+    display: flex;
+    align-items: center;
+    min-height: 230px;
+    padding: 20px 0;
+}
+
+.ev[data-st="next"] {
+    min-height: 150px;
+}
+
+.ev:last-child {
+    min-height: 0;
+}
+
+.ev-card {
+    --rx: 0deg;
+    --ry: 0deg;
+    position: relative;
+    width: calc(50% - 34px);
+    padding: 22px 24px 18px;
+    border: 1px solid var(--line);
+    border-radius: 6px 24px 24px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    clip-path: inset(-40px round 24px);
+    transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition:
+        transform 0.5s var(--ease),
+        border-color 0.4s,
+        background 0.4s,
+        opacity 0.9s var(--ease),
+        clip-path 1s var(--ease);
+    will-change: transform;
+}
+
+.ev:nth-child(odd) .ev-card {
+    margin-left: auto;
+}
+
+.ev:not(.in) .ev-card {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 24px);
+    transform: translateY(40px);
+}
+
+.ev-card.hov {
+    transition: transform 0.12s linear, border-color 0.4s, background 0.4s;
+}
+
+.ev-card::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    bottom: 22px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--green);
+    transition: background 0.4s;
+}
+
+.ev-card[data-st="now"]::before {
+    background: var(--lime);
+    box-shadow: 0 0 14px var(--lime);
+}
+
+.ev-card[data-st="next"] {
+    padding: 16px 22px;
+    border-style: dashed;
+    background: transparent;
+}
+
+.ev-card[data-st="next"]::before {
+    top: 16px;
+    bottom: 16px;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.ev-card.act {
+    border-color: rgba(198, 255, 0, 0.5);
+    background: rgba(198, 255, 0, 0.07);
+}
+
+.ev-card[data-st="next"].act {
+    border-color: rgba(255, 176, 32, 0.55);
+    background: rgba(255, 176, 32, 0.05);
+}
+
+.ev-card.flash {
+    animation: flash 1.4s var(--ease);
+}
+
+.ev-k {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    color: var(--grey);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.ev-k time {
+    font-variant-numeric: tabular-nums;
+}
+
+.ev-st {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--green);
+}
+
+.ev-st::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.ev-card[data-st="now"] .ev-st {
+    color: var(--lime);
+}
+
+.ev-card[data-st="now"] .ev-st::before {
+    animation: blink 1.4s ease-in-out infinite;
+}
+
+.ev-card[data-st="next"] .ev-st {
+    color: var(--grey);
+}
+
+.ev-card[data-st="next"] .ev-st::before {
+    border: 1.5px solid currentColor;
+    background: transparent;
+}
+
+.ev-t {
+    margin: 12px 0 8px;
+    font: 700 20px/1.15 var(--d);
+    letter-spacing: -0.035em;
+}
+
+.ev-card[data-st="next"] .ev-t {
+    margin: 8px 0 0;
+    color: var(--soft);
+    font-size: 16px;
+}
+
+.ev-t .wm {
+    display: inline-block;
+    overflow: hidden;
+    margin-bottom: -0.12em;
+    padding-bottom: 0.12em;
+    vertical-align: top;
+}
+
+.ev-t .w {
+    display: inline-block;
+    transform: translateY(115%);
+}
+
+.ev.in .ev-t .w {
+    transform: none;
+    transition: transform 0.8s var(--ease) calc(var(--k) * 70ms + 260ms);
+}
+
+.ev-o {
+    color: var(--soft);
+    font-size: 14px;
+}
+
+.ev-card[data-st="next"] .ev-o {
+    margin-top: 6px;
+    color: var(--grey);
+    font-size: 13px;
+}
+
+.ev-f {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.ev-who {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--soft);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.ev-who i {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--forest);
+    font: 700 9px var(--d);
+    font-style: normal;
+    letter-spacing: 0;
+}
+
+.ev-who small {
+    color: var(--grey);
+    font-size: 13px;
+}
+
+
+/* ========================================
+   6. ANIMAÇÕES
+======================================== */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0.25;
+    }
+}
+
+@keyframes sonar {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.75;
+    }
+
+    100% {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.9;
+        stroke-width: 4;
+    }
+
+    100% {
+        transform: scale(3.4);
+        opacity: 0;
+        stroke-width: 0.5;
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.2) rotate(-40deg);
+    }
+
+    60% {
+        transform: scale(1.25) rotate(6deg);
+    }
+
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes flash {
+    0% {
+        box-shadow: 0 0 0 0 rgba(198, 255, 0, 0.9);
+    }
+
+    100% {
+        box-shadow: 0 0 0 26px rgba(198, 255, 0, 0);
+    }
+}
+
+
+/* ========================================
+   7. LINHA DO TEMPO ESTREITA (CELULAR)
+   A classe .mob é aplicada pelo JS conforme a largura da própria linha do tempo.
+======================================== */
+
+.fio.mob {
+    padding-top: 24px;
+}
+
+.fio.mob .ev,
+.fio.mob .ev[data-st="next"] {
+    min-height: 0;
+    padding: 10px 0;
+}
+
+.fio.mob .ev-card,
+.fio.mob .ev:nth-child(odd) .ev-card {
+    width: auto;
+    margin: 0 0 0 60px;
+    padding: 16px 16px 12px;
+}
+
+.fio.mob .ev-card[data-st="next"] {
+    padding: 12px 16px;
+}
+
+.fio.mob .ev:not(.in) .ev-card {
+    transform: translateX(30px);
+}
+
+.fio.mob .ev-t {
+    font-size: 17px;
+}
+
+.fio.mob .ev-card[data-st="next"] .ev-t {
+    font-size: 15px;
+}
+
+.fio.mob .ev-f {
+    margin-top: 12px;
+    padding-top: 10px;
+}
+
+
+/* ========================================
+   8. RESPONSIVIDADE
+======================================== */
+
+/* tablets: o resumo vira um bloco no topo e o fio ocupa a largura toda */
+
+@media (max-width: 1180px) {
+    .cols {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+
+    .sum {
+        position: static;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px 32px;
+    }
+
+    .sum-id,
+    .rt,
+    .met,
+    .sla,
+    .load {
+        min-width: 0;
+    }
+
+    .sla {
+        align-self: center;
+    }
+
+    .load,
+    .acts {
+        grid-column: 1 / -1;
+    }
+
+    .acts {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .acts .link {
+        margin: 0 0 0 auto;
+    }
+}
+
+/* celulares: só o essencial */
+
+@media (max-width: 680px) {
+    .dv-list {
+        flex-wrap: nowrap;
+        margin: 0 -16px;
+        padding: 0 16px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .dv-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dv {
+        flex: none;
+    }
+
+    .sum {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 20px;
+        border-radius: 22px;
+    }
+
+    .sum-to {
+        margin-top: 8px;
+        font-size: 17px;
+    }
+
+    .acts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .acts .btn {
+        padding: 12px 10px;
+    }
+
+    .acts .link {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ev:not(.in) .ev-card {
+        transform: none;
+    }
+
+    .ev-t .w {
+        transform: none;
+    }
+}

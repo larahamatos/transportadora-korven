@@ -1,0 +1,181 @@
+
+/* ========================================
+   COMPONENTES COMPARTILHADOS
+   Botões, etiquetas de status e avisos.
+======================================== */
+
+/* ---------- botões ---------- */
+
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--lime);
+    color: #000;
+    font: 700 14px var(--b);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease), background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: #fff;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.btn.ghost {
+    border: 1.5px solid var(--line-2);
+    background: transparent;
+    color: #fff;
+}
+
+.btn.ghost:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+}
+
+.link {
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: var(--grey);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--line-2);
+    text-underline-offset: 4px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: var(--lime);
+}
+
+
+/* ---------- etiqueta de status ---------- */
+
+.chip {
+    padding: 4px 11px;
+    border: 1.5px solid currentColor;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.chip[data-s="start"] {
+    color: #8fd3ff;
+}
+
+.chip[data-s="transit"] {
+    color: var(--lime);
+}
+
+.chip[data-s="done"] {
+    border-color: var(--green);
+    background: var(--green);
+    color: #fff;
+}
+
+
+/* ---------- avisos ---------- */
+
+.toasts {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 60;
+    display: grid;
+    gap: 10px;
+    justify-items: end;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 360px;
+    padding: 13px 18px 13px 14px;
+    border: 1px solid rgba(198, 255, 0, 0.5);
+    border-radius: 16px;
+    background: rgba(8, 14, 10, 0.94);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    animation: toast-in 0.6s var(--ease) both;
+}
+
+.toast.out {
+    animation: toast-out 0.4s ease-in forwards;
+}
+
+.toast i {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: #000;
+}
+
+.toast[data-t="erro"] {
+    border-color: rgba(255, 176, 32, 0.6);
+}
+
+.toast[data-t="erro"] i {
+    background: var(--amber);
+}
+
+.toast i svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.toast b {
+    display: block;
+}
+
+.toast span {
+    color: var(--grey);
+    font-size: 13px;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.94);
+    }
+}
+
+@keyframes toast-out {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@media (max-width: 680px) {
+    .toasts {
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
+        justify-items: stretch;
+    }
+
+    .toast {
+        max-width: none;
+    }
+}

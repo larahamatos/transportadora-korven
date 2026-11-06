@@ -15,7 +15,7 @@ function conflito(e, campo) {
 module.exports = function entregas(repo, config) {
     return {
         // cria a entrega. Reenviar o mesmo pedido da mesma loja devolve a entrega já existente.
-        criar(cliente, corpo) {
+        async criar(cliente, corpo) {
             const agora = new Date();
             const { valor, detalhes } = v.criarEntrega(corpo, agora, config.prazoPadraoDias);
 
@@ -23,7 +23,7 @@ module.exports = function entregas(repo, config) {
                 throw validacao(detalhes);
             }
 
-            const existente = repo.buscarPorPedido(cliente.id, valor.pedido);
+            const existente = await repo.buscarPorPedido(cliente, valor.pedido);
 
             if (existente) {
                 return { dados: existente, criada: false };
@@ -46,9 +46,9 @@ module.exports = function entregas(repo, config) {
                 dados.codigo = gerarCodigo();
 
                 try {
-                    repo.criar(cliente.id, dados);
+                    await repo.criar(cliente, dados);
 
-                    return { dados: repo.buscarPorCodigo(cliente.id, dados.codigo), criada: true };
+                    return { dados: await repo.buscarPorCodigo(cliente, dados.codigo), criada: true };
                 } catch (e) {
                     if (conflito(e, "codigo_rastreamento")) {
                         continue;
@@ -56,7 +56,7 @@ module.exports = function entregas(repo, config) {
 
                     // duas requisições do mesmo pedido ao mesmo tempo: vale a que chegou primeiro
                     if (conflito(e, "codigo_pedido_externo")) {
-                        return { dados: repo.buscarPorPedido(cliente.id, valor.pedido), criada: false };
+                        return { dados: await repo.buscarPorPedido(cliente, valor.pedido), criada: false };
                     }
 
                     throw e;
@@ -66,8 +66,8 @@ module.exports = function entregas(repo, config) {
             throw new Error("Não foi possível gerar um código de rastreamento único.");
         },
 
-        consultar(cliente, codigo) {
-            const r = repo.buscarPorCodigo(cliente.id, String(codigo).trim().toUpperCase());
+        async consultar(cliente, codigo) {
+            const r = await repo.buscarPorCodigo(cliente, String(codigo).trim().toUpperCase());
 
             if (!r) {
                 throw naoEncontrado("Entrega não encontrada.");
@@ -76,14 +76,14 @@ module.exports = function entregas(repo, config) {
             return r;
         },
 
-        listar(cliente, query) {
+        async listar(cliente, query) {
             const { valor, detalhes } = v.filtros(query);
 
             if (detalhes.length) {
                 throw validacao(detalhes);
             }
 
-            const r = repo.listar(cliente.id, valor);
+            const r = await repo.listar(cliente, valor);
 
             return { dados: r.linhas, total: r.total, pagina: valor.pagina, limite: valor.limite };
         }

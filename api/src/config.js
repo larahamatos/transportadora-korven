@@ -8,7 +8,11 @@ function numero(nome, padrao) {
 
 module.exports = {
     porta: numero("PORT", 3000),
-    // lojas autorizadas, enquanto não há banco: "Nome:hashSha256,Outro Nome:hashSha256"
+    // banco (Supabase): quando os dois estão definidos, a API usa o banco; senão, repositórios em memória
+    supabaseUrl: (process.env.SUPABASE_URL || "").trim(),
+    supabaseAnonKey: (process.env.SUPABASE_ANON_KEY || "").trim(),
+
+    // lojas autorizadas no modo em memória (sem banco): "Nome:hashSha256,Outro Nome:hashSha256"
     // (gere com: npm run gerar-chave -- "LojaVerde")
     clientes: (process.env.CLIENTES || "").split(",").map((x) => x.trim()).filter(Boolean).map((x, i) => {
         const k = x.lastIndexOf(":");
