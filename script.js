@@ -1,47 +1,4 @@
-//rastreamento de encomendas
-
 (function () {
-    var st = [
-        "Coleta confirmada",
-        "Em trânsito — saída do centro de distribuição",
-        "Em trânsito — rodovia",
-        "Chegou à cidade de destino",
-        "Saiu para entrega"
-    ];
-
-    document.getElementById("tf").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        var v = document.getElementById("code").value.trim().toUpperCase();
-        var r = document.getElementById("res");
-
-        if (!v) {
-            r.textContent = "Digite um código para buscar, por exemplo KV-48213.";
-            return;
-        }
-
-        var h = 0;
-
-        for (var i = 0; i < v.length; i++) {
-            h = (h * 31 + v.charCodeAt(i)) % 997;
-        }
-
-        var s = h % st.length;
-        var p = Math.round(((s + 1) / st.length) * 100);
-
-        r.innerHTML =
-            "<b>" + v.replace(/[<>&]/g, "") + "</b>" +
-            '<div class="bar"><span style="width:0"></span></div>' +
-            st[s] + " · " + p + "% do trajeto";
-
-        setTimeout(function () {
-            var b = r.querySelector(".bar span");
-
-            if (b) {
-                b.style.width = p + "%";
-            }
-        }, 30);
-    });
 
 //formulario de orçamento
 

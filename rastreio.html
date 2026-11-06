@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rastreio de encomendas · Korven</title>
+<meta name="description" content="Digite o código de rastreio e veja em que etapa está a sua carga, com data e hora de cada atualização.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="Logotipo K com Estrada Neon (2).png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@400;700;900&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="rastreio.css">
+</head>
+<body>
+
+<nav><div class="wrap">
+<a class="logo" href="Korven%20%E2%80%94%20Log%C3%ADstica%20em%20movimento.html" aria-label="Korven — voltar ao site">
+    <img src="Logotipo K com Estrada Neon (2).png" alt="">
+    <span>ORVEN</span>
+</a>
+<ul><li><a href="Korven%20%E2%80%94%20Log%C3%ADstica%20em%20movimento.html#servicos">Serviços</a></li><li><a href="Korven%20%E2%80%94%20Log%C3%ADstica%20em%20movimento.html#como">Como funciona</a></li><li><a href="rastreio.html" aria-current="page">Rastreio</a></li></ul>
+<a class="btn" href="Korven%20%E2%80%94%20Log%C3%ADstica%20em%20movimento.html#cotacao" style="padding:11px 22px">Pedir cotação</a>
+</div></nav>
+
+<main class="rs">
+
+<section class="rs-hero wrap">
+    <p class="rs-eyebrow">Rastreio de encomendas</p>
+    <h1>Onde está <em>sua carga?</em></h1>
+    <p class="rs-lead">Digite o código de rastreio que veio na sua nota ou no e-mail de confirmação.</p>
+
+    <form class="rs-form" id="rs-form" novalidate>
+        <label class="rs-sr" for="rs-code">Código de rastreio</label>
+        <div class="rs-input" id="rs-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10"/></svg>
+            <input id="rs-code" name="codigo" placeholder="KV-123456" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" aria-describedby="rs-msg" autofocus>
+            <button class="btn" type="submit" id="rs-go">Rastrear</button>
+        </div>
+        <p class="rs-msg" id="rs-msg">O código começa com <b>KV-</b> e tem de 5 a 6 números. Exemplo: KV-48213.</p>
+    </form>
+
+    <div class="rs-recent" id="rs-recent" hidden></div>
+</section>
+
+<section class="rs-out wrap" id="rs-out" aria-live="polite"></section>
+
+</main>
+
+<footer>
+<div class="wrap"><div class="logo"></div><small>Por segurança, mostramos só o andamento da entrega, sem endereços nem dados do destinatário. · © 2026 Korven Transportes. · <a href="sistema/index.html" class="rs-staff">Acesso para clientes e equipe</a></small></div>
+</footer>
+
+<script src="rastreio.js"></script>
+</body>
+</html>
