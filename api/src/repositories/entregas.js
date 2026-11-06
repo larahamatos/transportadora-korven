@@ -1,14 +1,13 @@
-// repositório de entregas — IMPLEMENTAÇÃO TEMPORÁRIA EM MEMÓRIA (os dados somem ao reiniciar)
+// repositório de entregas em memória (os dados somem ao reiniciar), para desenvolvimento e testes sem banco.
+// O de produção é o supabase.js, com o mesmo contrato. Toda consulta filtra pela loja: uma loja nunca enxerga
+// entregas de outra. Os métodos recebem o objeto "cliente" devolvido por clientes.autenticar.
 //
-// Quando o banco existir, reescreva só este arquivo mantendo estes métodos e formatos.
-// Toda consulta filtra por clienteId: uma loja nunca enxerga entregas de outra.
-//
-//   buscarPorCodigo(clienteId, codigo)  -> { entrega, itens, historico } | null
-//   buscarPorPedido(clienteId, pedido)  -> { entrega, itens, historico } | null
-//   criar(clienteId, d)                 -> grava entrega + itens + 1º registro do histórico
+//   buscarPorCodigo(cliente, codigo)    -> { entrega, itens, historico } | null
+//   buscarPorPedido(cliente, pedido)    -> { entrega, itens, historico } | null
+//   criar(cliente, d)                   -> grava entrega + itens + 1º registro do histórico
 //                                          de forma atômica; lança ConflitoUnico("codigo_rastreamento")
 //                                          ou ConflitoUnico("codigo_pedido_externo") se violar unicidade
-//   listar(clienteId, filtros)          -> { total, linhas } (linhas = só o objeto "entrega")
+//   listar(cliente, filtros)           -> { total, linhas } (linhas = só o objeto "entrega")
 //
 // O formato de { entrega, itens, historico } está em sistema/docs/modelo-de-dados.md.
 
@@ -30,15 +29,17 @@ module.exports = function entregas() {
     }
 
     return {
-        buscarPorCodigo(clienteId, codigo) {
-            return saida(achar(clienteId, "codigo_rastreamento", codigo));
+        async buscarPorCodigo(cliente, codigo) {
+            return saida(achar(cliente.id, "codigo_rastreamento", codigo));
         },
 
-        buscarPorPedido(clienteId, pedido) {
-            return saida(achar(clienteId, "codigo_pedido_externo", pedido));
+        async buscarPorPedido(cliente, pedido) {
+            return saida(achar(cliente.id, "codigo_pedido_externo", pedido));
         },
 
-        criar(clienteId, d) {
+        async criar(cliente, d) {
+            const clienteId = cliente.id;
+
             if (registros.some((r) => r.entrega.codigo_rastreamento === d.codigo)) {
                 throw new ConflitoUnico("codigo_rastreamento");
             }
@@ -72,9 +73,9 @@ module.exports = function entregas() {
         },
 
         // mais recentes primeiro
-        listar(clienteId, f) {
+        async listar(cliente, f) {
             const todas = registros
-                .filter((r) => r.clienteId === clienteId)
+                .filter((r) => r.clienteId === cliente.id)
                 .filter((r) => !f.pedido || r.entrega.codigo_pedido_externo === f.pedido)
                 .filter((r) => !f.status || r.entrega.status === f.status)
                 .reverse();

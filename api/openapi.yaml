@@ -103,7 +103,7 @@ components:
     chaveBearer:
       type: http
       scheme: bearer
-      description: "Chave da loja em `Authorization: Bearer <chave>`. O cabeçalho `X-API-Key` também é aceito."
+      description: "Token da loja (`chave.segredo`, criado em Integrações de API no sistema) em `Authorization: Bearer <token>`. O cabeçalho `X-API-Key` também é aceito."
   responses:
     Erro:
       description: Erro. O campo `codigo` é estável e pode ser usado em tratamento automático.

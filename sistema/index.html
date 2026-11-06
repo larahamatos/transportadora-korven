@@ -2,19 +2,146 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Korven — Sistema</title>
-<script src="assets/js/icons.js"></script>
-<script src="assets/js/auth.js"></script>
-<script>
-    // Entrada do sistema: com sessão vai para o app; sem sessão, para o login.
-    var u = Korven.auth.usuario();
-
-    location.replace(u ? Korven.auth.destino(u.perfil_acesso) : "login.html");
-</script>
+<meta name="theme-color" content="#050806">
+<title>Korven · Sistema</title>
+<link rel="icon" href="../Logotipo K com Estrada Neon (2).png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@400;700;900&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/shell.css">
+<link rel="stylesheet" href="assets/css/componentes.css">
+<link rel="stylesheet" href="assets/css/ui.css">
+<link rel="stylesheet" href="assets/css/paginas/login.css">
+<link rel="stylesheet" href="assets/css/paginas/sistema.css">
 </head>
-<body style="background:#000">
-<noscript><a href="login.html">Entrar</a></noscript>
+<body class="app deslogado">
+
+<div class="bg" id="bg" aria-hidden="true">
+    <div class="bg-l" data-k="0.03"></div>
+    <div class="bg-l" data-k="0.07"></div>
+    <div class="bg-l" data-k="0.13"></div>
+</div>
+
+<!-- ============ login ============ -->
+<section class="login" id="login" aria-label="Entrar no sistema">
+
+    <div class="login-hero">
+        <a class="login-brand" id="l-site" href="#" aria-label="Voltar ao site da Korven">
+            <img src="../Logotipo K com Estrada Neon (2).png" alt="">
+            <span>Korven</span>
+        </a>
+
+        <h2>Cada entrega,<br><em>do primeiro ao último quilômetro.</em></h2>
+        <p>Acompanhe coletas, rotas e prazos em um só lugar. Cada etapa fica registrada, com data e responsável.</p>
+
+        <div class="login-demo" aria-hidden="true">
+            <div class="ld-top"><strong>KV-48213</strong><span class="st" data-st="em_rodovia">Em rodovia</span></div>
+            <div class="ld-ends"><span>Porto Alegre/RS</span><span>São Paulo/SP</span></div>
+            <div class="ld-line"><i></i><b></b></div>
+            <div class="ld-foot"><span>Etapa 4 de 7</span><span>No prazo</span></div>
+        </div>
+    </div>
+
+    <div class="login-side">
+        <div class="login-card">
+
+            <form id="l-entrar" class="form" novalidate>
+                <div>
+                    <p class="eyebrow">Sistema interno</p>
+                    <h1>Entrar</h1>
+                </div>
+                <div class="field"><label for="l-email">E-mail</label><input id="l-email" name="email" type="email" autocomplete="username" inputmode="email" placeholder="voce@empresa.com" required></div>
+                <div class="field"><label for="l-senha">Senha</label><input id="l-senha" name="senha" type="password" autocomplete="current-password" placeholder="Sua senha" required></div>
+                <div class="form-err" id="l-erro" role="alert"></div>
+                <button class="btn block" type="submit">Entrar</button>
+                <button class="link" id="l-esqueci" type="button">Esqueci minha senha</button>
+            </form>
+
+            <form id="l-recuperar" class="form" novalidate hidden>
+                <div>
+                    <p class="eyebrow">Recuperar acesso</p>
+                    <h1>Esqueci a senha</h1>
+                </div>
+                <p class="login-txt">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+                <div class="field"><label for="r-email">E-mail</label><input id="r-email" name="email" type="email" autocomplete="username" inputmode="email" required></div>
+                <div class="form-err" id="r-erro" role="alert"></div>
+                <button class="btn block" type="submit">Enviar link</button>
+                <button class="link" data-voltar type="button">Voltar para o login</button>
+            </form>
+
+            <form id="l-nova" class="form" novalidate hidden>
+                <div>
+                    <p class="eyebrow">Nova senha</p>
+                    <h1>Defina sua senha</h1>
+                </div>
+                <div class="field"><label for="n-senha">Nova senha</label><input id="n-senha" name="senha" type="password" autocomplete="new-password" minlength="8" required><span class="hint">Mínimo de 8 caracteres.</span></div>
+                <div class="field"><label for="n-conf">Repita a senha</label><input id="n-conf" name="conf" type="password" autocomplete="new-password" required></div>
+                <div class="form-err" id="n-erro" role="alert"></div>
+                <button class="btn block" type="submit">Salvar e entrar</button>
+            </form>
+
+        </div>
+        <p class="login-rodape">Precisa rastrear uma encomenda? <a id="l-rastrear" href="#">Use o rastreio público do site</a>.</p>
+    </div>
+
+</section>
+
+<!-- ============ aplicação ============ -->
+<aside class="side">
+    <a class="side-logo" href="#/" aria-label="Korven — início">
+        <img src="../Logotipo K com Estrada Neon (2).png" alt="">
+    </a>
+    <nav id="nav" aria-label="Menu do sistema"></nav>
+    <div class="side-sair"><button id="sair" type="button" data-tip="Sair" aria-label="Sair"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></svg></button></div>
+</aside>
+
+<div class="main">
+
+<header class="top">
+    <a class="top-logo" href="#/" aria-label="Korven"><img src="../Logotipo K com Estrada Neon (2).png" alt=""></a>
+    <ol class="crumbs" id="crumbs" aria-label="Você está em"></ol>
+    <form class="top-search" id="busca-form" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+        <input id="busca" aria-label="Buscar entrega" placeholder="Código de rastreio ou pedido" autocomplete="off" spellcheck="false">
+        <kbd aria-hidden="true">/</kbd>
+    </form>
+    <button class="top-user" id="avatar" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menu do usuário">—</button>
+</header>
+
+<main class="page" id="page" tabindex="-1"></main>
+
+</div>
+
+<nav class="tabbar" id="tabbar" aria-label="Menu"></nav>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="assets/js/core/dom.js"></script>
+<script src="assets/js/core/formato.js"></script>
+<script src="assets/js/core/config.js"></script>
+<script src="assets/js/core/status.js"></script>
+<script src="assets/js/core/sessao.js"></script>
+<script src="assets/js/core/menu.js"></script>
+<script src="assets/js/componentes/aviso.js"></script>
+<script src="assets/js/componentes/fundo.js"></script>
+<script src="assets/js/componentes/ui.js"></script>
+<script src="assets/js/componentes/graficos.js"></script>
+<script src="assets/js/api/entregas.js"></script>
+<script src="assets/js/api/cadastros.js"></script>
+<script src="assets/js/paginas/painel.js"></script>
+<script src="assets/js/paginas/entregas.js"></script>
+<script src="assets/js/paginas/entrega.js"></script>
+<script src="assets/js/paginas/nova-entrega.js"></script>
+<script src="assets/js/paginas/clientes.js"></script>
+<script src="assets/js/paginas/motoristas.js"></script>
+<script src="assets/js/paginas/usuarios.js"></script>
+<script src="assets/js/paginas/integracoes.js"></script>
+<script src="assets/js/paginas/relatorios.js"></script>
+<script src="assets/js/paginas/perfil.js"></script>
+<script src="assets/js/app.js"></script>
 </body>
 </html>
