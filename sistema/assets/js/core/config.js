@@ -10,7 +10,7 @@ window.Korven = window.Korven || {};
 
     K.config = {
         supabaseUrl: URL,
-        site: "../Korven%20%E2%80%94%20Log%C3%ADstica%20em%20movimento.html",
+        site: "../index.html",
         rastreio: "../rastreio.html",
         docsApi: "../api/openapi.yaml"
     };
