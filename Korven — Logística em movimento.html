@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Korven — Logística em movimento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@400;700;900&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +15,7 @@
     <img src="Logotipo K com Estrada Neon (2).png" alt="">
     <span>ORVEN</span>
 </a>
-<ul><li><a href="#servicos">Serviços</a></li><li><a href="#como">Como funciona</a></li><li><a href="#rastreio">Rastreio</a></li><li><a href="#cotacao">Cotação</a></li></ul>
+<ul><li><a href="#servicos">Serviços</a></li><li><a href="#como">Como funciona</a></li><li><a href="rastreio.html">Rastreio</a></li><li><a href="#cotacao">Cotação</a></li></ul>
 <a class="btn" href="#cotacao" style="padding:11px 22px">Pedir cotação</a>
 </div></nav>
 
@@ -21,7 +23,7 @@
 <div class="wrap">
 <h1>Sua carga, <em>sempre</em> à frente.</h1>
 <p class="lead">Transporte rodoviário com rastreio em tempo real, rotas calculadas por dados e entregas que chegam no horário combinado.</p>
-<div class="cta"><a class="btn" href="#cotacao">Pedir cotação</a><a class="btn ghost" href="#rastreio">Rastrear carga</a></div>
+<div class="cta"><a class="btn" href="#cotacao">Pedir cotação</a><a class="btn ghost" href="rastreio.html">Rastrear carga</a></div>
 </div>
 <div class="map wrap" id="rastreio">
 <svg viewBox="0 0 1200 380" role="img" aria-label="Mapa animado de uma rota de entrega entre cidades">
@@ -34,8 +36,8 @@
 </svg>
 <div class="hud">
 <h3>Rastreie sua carga</h3>
-<form id="tf"><input id="code" aria-label="Código de rastreio" placeholder="Ex.: KV-48213" autocomplete="off"><button class="btn" type="submit">Buscar</button></form>
-<div id="res" aria-live="polite">Digite o código da sua nota para ver onde a carga está agora.</div>
+<form id="tf" action="rastreio.html" method="get"><input id="code" name="codigo" aria-label="Código de rastreio" placeholder="Ex.: KV-48213" autocomplete="off" required><button class="btn" type="submit">Buscar</button></form>
+<div id="res">Digite o código da sua nota e veja, na próxima tela, onde a carga está agora.</div>
 </div>
 </div>
 <div class="strip" aria-hidden="true"><div>
@@ -90,5 +92,6 @@
 <div class="wrap"><div class="logo"></div><small>Logística em movimento. © 2026 Korven Transportes.</small></div>
 </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
