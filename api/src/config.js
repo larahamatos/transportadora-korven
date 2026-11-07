@@ -6,8 +6,17 @@ function numero(nome, padrao) {
     return Number.isFinite(v) && v > 0 ? v : padrao;
 }
 
+// quantos proxies confiáveis existem na frente da API (0 = nenhum). Atrás de um proxy (Render, Vercel, Nginx),
+// use 1: sem isso todos os clientes aparecem com o IP do proxy e o limite por IP pune todo mundo junto.
+function proxies() {
+    const v = Number.parseInt(process.env.TRUST_PROXY, 10);
+
+    return Number.isInteger(v) && v >= 0 && v <= 5 ? v : 0;
+}
+
 module.exports = {
     porta: numero("PORT", 3000),
+    confiarProxy: proxies(),
     // banco (Supabase): quando os dois estão definidos, a API usa o banco; senão, repositórios em memória
     supabaseUrl: (process.env.SUPABASE_URL || "").trim(),
     supabaseAnonKey: (process.env.SUPABASE_ANON_KEY || "").trim(),

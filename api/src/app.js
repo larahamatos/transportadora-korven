@@ -18,7 +18,7 @@ function criarApp(repos, config) {
     const servico = entregasServico(repos.entregas, config);
 
     app.disable("x-powered-by");
-    app.set("trust proxy", false);
+    app.set("trust proxy", config.confiarProxy || false);
 
     app.use((req, res, next) => {
         res.set("X-Content-Type-Options", "nosniff");

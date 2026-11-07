@@ -348,4 +348,34 @@ test("limites de uso", async (t) => {
 
         assert.deepEqual(rs.map((r) => r.status), [401, 401, 401, 429, 429]);
     });
+
+    await t.test("atrás de proxy (TRUST_PROXY=1) o bloqueio vale por cliente, não pelo IP do proxy", async () => {
+        const s = await subir({ falhasPorMinuto: 2, confiarProxy: 1 });
+
+        t.after(s.encerrar);
+
+        const tentar = (ip, chave) => s.chamar("GET", "/api/v1/entregas", { chave, headers: { "X-Forwarded-For": ip } });
+
+        // o atacante estoura o limite do próprio IP...
+        assert.equal((await tentar("203.0.113.9", "errada1")).status, 401);
+        assert.equal((await tentar("203.0.113.9", "errada2")).status, 401);
+        assert.equal((await tentar("203.0.113.9", "errada3")).status, 429);
+
+        // ...e a loja, que vem de outro IP, continua passando com a chave certa
+        assert.equal((await tentar("198.51.100.7", s.chaves.LojaVerde)).status, 200);
+    });
+
+    await t.test("sem TRUST_PROXY o cabeçalho X-Forwarded-For é ignorado (não dá para forjar o IP)", async () => {
+        const s = await subir({ falhasPorMinuto: 2 });
+
+        t.after(s.encerrar);
+
+        const rs = [];
+
+        for (let i = 0; i < 4; i++) {
+            rs.push((await s.chamar("GET", "/api/v1/entregas", { chave: "errada" + i, headers: { "X-Forwarded-For": "10.0.0." + i } })).status);
+        }
+
+        assert.deepEqual(rs, [401, 401, 429, 429]);
+    });
 });
