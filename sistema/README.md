@@ -6,7 +6,8 @@ puros, sem build, no mesmo estilo da landing page. Dados e login vêm do Supabas
 ## Como abrir
 
 Sirva a pasta do projeto (ex.: `python -m http.server 5173` na raiz) e acesse `http://localhost:5173/sistema/`.
-As contas de demonstração estão em `docs/acessos-demo.txt` (arquivo local, fora do git).
+As contas de demonstração vêm do `supabase/seed.sql` (senha definida por quem roda o seed). Para usar outro projeto
+Supabase, troque a URL e a chave pública em `assets/js/core/config.js` (veja `../docs/banco-de-dados.md`).
 
 ## Telas
 
