@@ -23,6 +23,11 @@ npm test                 # testes de ponta a ponta (modo em memória, sem rede)
 Para criar a chave de uma loja: entre no sistema, abra **Integrações de API**, crie uma integração e copie o token.
 No modo em memória, use `npm run gerar-chave -- "LojaVerde"` e a variável `CLIENTES` do `.env`.
 
+## Requisições de teste
+
+Coleção do Postman (também serve no Insomnia e no Bruno) e arquivo `.http` (VS Code, JetBrains), sem token, em
+[requests/](requests/README.md).
+
 ## Uso
 
 Toda chamada em `/api/v1` envia o token da loja: `Authorization: Bearer <chave>.<segredo>` (ou `X-API-Key: <chave>.<segredo>`).
@@ -63,7 +68,8 @@ Erros seguem sempre `{ "erro": { "codigo", "mensagem", "detalhes"? } }`:
 - Cada loja só enxerga as próprias entregas; entrega de outra loja responde `404`.
 - `codigo_pedido_externo` é único por loja: a criação é idempotente, inclusive com requisições simultâneas.
 - Sem `data_prevista`, vale o prazo padrão (`PRAZO_PADRAO_DIAS`, 5 dias). Se enviada, precisa ser futura.
-- Limites: 120 requisições/min por chave e 10 tentativas inválidas/min por IP (ajustáveis no `.env`).
+- Limites: 120 requisições/min por chave e 10 tentativas inválidas/min por IP (ajustáveis no `.env`). Atrás de proxy
+  (Render, Nginx), defina `TRUST_PROXY=1`; sem isso todos os clientes parecem ter o IP do proxy e o limite por IP pune todos juntos.
 - O segredo só aparece quando é gerado; o banco guarda apenas o hash SHA-256. Integração inativa responde `401`.
 
 ## Estrutura
