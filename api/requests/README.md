@@ -9,7 +9,9 @@ Duas formas de chamar a API sem escrever `curl` na mão. Nenhum arquivo contém 
 
 ## Antes de usar
 
-1. **Suba a API** (`cd api && npm start`, em `http://localhost:3000`) ou use a publicada.
+1. **Suba a API** (`cd api && npm start`, em `http://localhost:3000`) ou use a publicada em
+   `https://korven-api.onrender.com` (troque o `baseUrl`; no plano gratuito do Render a primeira chamada pode levar
+   cerca de 1 minuto, porque o serviço dorme sem uso).
 2. **Crie um token:** no sistema, em **Integrações de API → Nova integração**. O token (`chave.segredo`) aparece uma única vez.
 3. **Preencha:** `@token` em `korven.http`, ou a variável `token` da coleção do Postman. Confira também `baseUrl`.
    Não faça commit com o token preenchido.

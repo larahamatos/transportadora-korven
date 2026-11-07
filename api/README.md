@@ -23,6 +23,12 @@ npm test                 # testes de ponta a ponta (modo em memória, sem rede)
 Para criar a chave de uma loja: entre no sistema, abra **Integrações de API**, crie uma integração e copie o token.
 No modo em memória, use `npm run gerar-chave -- "LojaVerde"` e a variável `CLIENTES` do `.env`.
 
+## API publicada
+
+`https://korven-api.onrender.com` (Render, plano gratuito: dorme sem uso e a primeira chamada pode levar cerca de 1 minuto).
+Documentação interativa em [/docs](https://korven-api.onrender.com/docs). Variáveis de ambiente do serviço:
+`SUPABASE_URL`, `SUPABASE_ANON_KEY` e `TRUST_PROXY=2` (o Render tem dois proxies na frente da API).
+
 ## Requisições de teste
 
 Coleção do Postman (também serve no Insomnia e no Bruno) e arquivo `.http` (VS Code, JetBrains), sem token, em
@@ -69,7 +75,9 @@ Erros seguem sempre `{ "erro": { "codigo", "mensagem", "detalhes"? } }`:
 - `codigo_pedido_externo` é único por loja: a criação é idempotente, inclusive com requisições simultâneas.
 - Sem `data_prevista`, vale o prazo padrão (`PRAZO_PADRAO_DIAS`, 5 dias). Se enviada, precisa ser futura.
 - Limites: 120 requisições/min por chave e 10 tentativas inválidas/min por IP (ajustáveis no `.env`). Atrás de proxy
-  (Render, Nginx), defina `TRUST_PROXY=1`; sem isso todos os clientes parecem ter o IP do proxy e o limite por IP pune todos juntos.
+  (Render, Nginx), defina `TRUST_PROXY` com o número de proxies à frente da API (no Render, `2`); sem isso todos os clientes parecem ter
+  o IP do proxy e o limite por IP pune todos juntos. Com o número errado o limite deixa de funcionar: confira enviando
+  mais de 10 tentativas inválidas seguidas, que devem terminar em 429.
 - O segredo só aparece quando é gerado; o banco guarda apenas o hash SHA-256. Integração inativa responde `401`.
 
 ## Estrutura

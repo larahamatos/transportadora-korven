@@ -11,7 +11,10 @@
 # A mesma coleção, com testes automáticos, está em Korven-API.postman_collection.json
 # (Postman, Insomnia, Bruno, Hoppscotch).
 
+# API local:
 @baseUrl = http://localhost:3000
+# API publicada (o plano gratuito do Render dorme; a primeira chamada pode levar ~1 min):
+# @baseUrl = https://korven-api.onrender.com
 @token =
 @pedido = TESTE-0001
 @codigo = KV-000000
