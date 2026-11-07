@@ -1,0 +1,803 @@
+{
+  "info": {
+    "name": "Korven · API de integração",
+    "description": "Requisições de teste da API de integração da Korven. Antes de usar, preencha a variável `token` (formato chave.segredo, criado em Integrações de API no sistema) e confira `baseUrl`. O token não é guardado no repositório. Cada requisição traz testes automáticos com o status esperado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get(\"pedido\")) {",
+          "    pm.collectionVariables.set(\"pedido\", \"TESTE-\" + Date.now());",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "pedido",
+      "value": ""
+    },
+    {
+      "key": "codigo",
+      "value": "KV-000000"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 · Sem token",
+      "item": [
+        {
+          "name": "Saúde da API",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});",
+                  "pm.test(\"status ok\", function () { pm.expect(pm.response.json().status).to.eql(\"ok\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/saude",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "saude"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Contrato OpenAPI (JSON)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/docs/openapi.json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "docs",
+                "openapi.json"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "A documentação interativa (Swagger UI) fica em {{baseUrl}}/docs"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 · Entregas (precisam de token)",
+      "item": [
+        {
+          "name": "Criar entrega",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200 ou 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var j = pm.response.json();",
+                  "if (j && j.entrega) { pm.collectionVariables.set(\"codigo\", j.entrega.codigo_rastreamento); }",
+                  "pm.test(\"devolve entrega, itens e histórico\", function () { pm.expect(j).to.have.keys([\"entrega\", \"itens\", \"historico\"]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_pedido_externo\": \"{{pedido}}\",\n  \"nome_destinatario\": \"Marina Souza Almeida\",\n  \"endereco_origem\": \"Porto Alegre/RS\",\n  \"endereco_destino\": \"São Paulo/SP\",\n  \"itens\": [\n    {\n      \"descricao\": \"Monitor 27\\\"\",\n      \"quantidade\": 3,\n      \"peso\": 21\n    },\n    {\n      \"descricao\": \"Teclado\",\n      \"quantidade\": 3,\n      \"peso\": 2.4\n    }\n  ]\n}"
+            },
+            "description": "201 quando cria; 200 se o mesmo pedido já existir. Guarda o código de rastreio em {{codigo}}."
+          }
+        },
+        {
+          "name": "Reenviar o mesmo pedido (idempotente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});",
+                  "var j = pm.response.json();",
+                  "if (j && j.entrega) { pm.collectionVariables.set(\"codigo\", j.entrega.codigo_rastreamento); }",
+                  "pm.test(\"devolve entrega, itens e histórico\", function () { pm.expect(j).to.have.keys([\"entrega\", \"itens\", \"historico\"]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_pedido_externo\": \"{{pedido}}\",\n  \"nome_destinatario\": \"Marina Souza Almeida\",\n  \"endereco_origem\": \"Porto Alegre/RS\",\n  \"endereco_destino\": \"São Paulo/SP\",\n  \"itens\": [\n    {\n      \"descricao\": \"Monitor 27\\\"\",\n      \"quantidade\": 3,\n      \"peso\": 21\n    },\n    {\n      \"descricao\": \"Teclado\",\n      \"quantidade\": 3,\n      \"peso\": 2.4\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Criar entrega com data prevista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200 ou 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_pedido_externo\": \"{{pedido}}-COM-DATA\",\n  \"nome_destinatario\": \"Rafael Bittencourt\",\n  \"endereco_origem\": \"Curitiba/PR\",\n  \"endereco_destino\": \"Belo Horizonte/MG\",\n  \"data_prevista\": \"2030-01-15T18:00:00-03:00\",\n  \"itens\": [\n    {\n      \"descricao\": \"Roteador\",\n      \"quantidade\": 2,\n      \"peso\": 1.8\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Consultar entrega (itens e histórico)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});",
+                  "pm.test(\"começa solicitada\", function () { pm.expect(pm.response.json().historico[0].status_novo).to.eql(\"solicitada\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas/{{codigo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas",
+                "{{codigo}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar entregas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});",
+                  "pm.test(\"tem total e dados\", function () { var j = pm.response.json(); pm.expect(j).to.have.property(\"total\"); pm.expect(j.dados).to.be.an(\"array\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas?limite=10&pagina=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "10"
+                },
+                {
+                  "key": "pagina",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar filtrando por pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas?codigo_pedido_externo={{pedido}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ],
+              "query": [
+                {
+                  "key": "codigo_pedido_externo",
+                  "value": "{{pedido}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar filtrando por status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas?status=solicitada&limite=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "solicitada"
+                },
+                {
+                  "key": "limite",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Usando X-API-Key no lugar do Bearer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas?limite=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "1"
+                }
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 · Erros esperados",
+      "item": [
+        {
+          "name": "Sem token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 401\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401]);",
+                  "});",
+                  "pm.test(\"codigo de erro NAO_AUTENTICADO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"NAO_AUTENTICADO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Token inválido (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 401\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401]);",
+                  "});",
+                  "pm.test(\"codigo de erro NAO_AUTENTICADO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"NAO_AUTENTICADO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer chave_invalida.segredo_invalido"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Várias tentativas inválidas seguidas levam a 429 (limite por IP)."
+          }
+        },
+        {
+          "name": "Campos faltando (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 422\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([422]);",
+                  "});",
+                  "pm.test(\"codigo de erro VALIDACAO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"VALIDACAO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_pedido_externo\": \"{{pedido}}-INVALIDO\",\n  \"endereco_origem\": \"Porto Alegre/RS\",\n  \"itens\": []\n}"
+            }
+          }
+        },
+        {
+          "name": "Data prevista no passado (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 422\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([422]);",
+                  "});",
+                  "pm.test(\"codigo de erro VALIDACAO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"VALIDACAO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_pedido_externo\": \"{{pedido}}-PASSADO\",\n  \"nome_destinatario\": \"Fulano de Tal\",\n  \"endereco_origem\": \"Porto Alegre/RS\",\n  \"endereco_destino\": \"Recife/PE\",\n  \"data_prevista\": \"2020-01-01T10:00:00-03:00\",\n  \"itens\": [\n    {\n      \"descricao\": \"Caixa\",\n      \"quantidade\": 1,\n      \"peso\": 1\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Status inválido no filtro (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 422\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([422]);",
+                  "});",
+                  "pm.test(\"codigo de erro VALIDACAO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"VALIDACAO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas?status=voando",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "voando"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Corpo que não é JSON (415)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 415\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([415]);",
+                  "});",
+                  "pm.test(\"codigo de erro TIPO_NAO_SUPORTADO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"TIPO_NAO_SUPORTADO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "isto não é json"
+            }
+          }
+        },
+        {
+          "name": "JSON quebrado (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 400\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400]);",
+                  "});",
+                  "pm.test(\"codigo de erro JSON_INVALIDO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"JSON_INVALIDO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"codigo_pedido_externo\": \"quebrado\","
+            }
+          }
+        },
+        {
+          "name": "Entrega inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 404\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404]);",
+                  "});",
+                  "pm.test(\"codigo de erro NAO_ENCONTRADO\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"NAO_ENCONTRADO\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/entregas/KV-000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "entregas",
+                "KV-000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rota inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 404\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404]);",
+                  "});",
+                  "pm.test(\"codigo de erro ROTA_INEXISTENTE\", function () { pm.expect(pm.response.json().erro.codigo).to.eql(\"ROTA_INEXISTENTE\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/qualquer-coisa",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "qualquer-coisa"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

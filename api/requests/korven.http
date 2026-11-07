@@ -1,0 +1,139 @@
+# Requisições de teste da API de integração Korven
+#
+# Funciona direto no VS Code (extensão "REST Client", de Huachao Mao), nos IDEs da JetBrains (IntelliJ, WebStorm,
+# PyCharm...) e no Zed. Clique em "Send Request" acima de cada bloco, separados por ###.
+#
+# Antes de usar:
+#   1. Suba a API (cd api && npm start) ou aponte @baseUrl para a API publicada.
+#   2. Cole o seu token em @token. Ele é criado no sistema, em "Integrações de API", e tem o formato chave.segredo.
+#      NÃO commite o token: esta variável fica vazia no repositório.
+#
+# A mesma coleção, com testes automáticos, está em Korven-API.postman_collection.json
+# (Postman, Insomnia, Bruno, Hoppscotch).
+
+@baseUrl = http://localhost:3000
+@token =
+@pedido = TESTE-0001
+@codigo = KV-000000
+
+### ============================ SEM TOKEN ============================
+
+### Saúde da API (200)
+GET {{baseUrl}}/saude
+
+### Contrato OpenAPI em JSON (200). A documentação interativa fica em {{baseUrl}}/docs
+GET {{baseUrl}}/docs/openapi.json
+
+
+### ===================== ENTREGAS (precisam de token) =====================
+
+### Criar entrega (201). Enviar de novo o mesmo pedido devolve a existente (200).
+# Copie o codigo_rastreamento da resposta para a variável @codigo lá em cima.
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "codigo_pedido_externo": "{{pedido}}",
+  "nome_destinatario": "Marina Souza Almeida",
+  "endereco_origem": "Porto Alegre/RS",
+  "endereco_destino": "São Paulo/SP",
+  "itens": [
+    { "descricao": "Monitor 27\"", "quantidade": 3, "peso": 21 },
+    { "descricao": "Teclado", "quantidade": 3, "peso": 2.4 }
+  ]
+}
+
+### Criar entrega com data prevista (use uma data futura)
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "codigo_pedido_externo": "{{pedido}}-COM-DATA",
+  "nome_destinatario": "Rafael Bittencourt",
+  "endereco_origem": "Curitiba/PR",
+  "endereco_destino": "Belo Horizonte/MG",
+  "data_prevista": "2030-01-15T18:00:00-03:00",
+  "itens": [{ "descricao": "Roteador", "quantidade": 2, "peso": 1.8 }]
+}
+
+### Consultar uma entrega, com itens e histórico (200)
+GET {{baseUrl}}/api/v1/entregas/{{codigo}}
+Authorization: Bearer {{token}}
+
+### Listar as entregas da loja (200)
+GET {{baseUrl}}/api/v1/entregas?limite=10&pagina=1
+Authorization: Bearer {{token}}
+
+### Listar filtrando por pedido
+GET {{baseUrl}}/api/v1/entregas?codigo_pedido_externo={{pedido}}
+Authorization: Bearer {{token}}
+
+### Listar filtrando por status
+GET {{baseUrl}}/api/v1/entregas?status=solicitada&limite=5
+Authorization: Bearer {{token}}
+
+### Também aceita o cabeçalho X-API-Key no lugar do Bearer
+GET {{baseUrl}}/api/v1/entregas?limite=1
+X-API-Key: {{token}}
+
+
+### ======================= ERROS ESPERADOS =======================
+
+### Sem token: 401 NAO_AUTENTICADO
+GET {{baseUrl}}/api/v1/entregas
+
+### Token inválido: 401 NAO_AUTENTICADO (várias tentativas seguidas levam a 429)
+GET {{baseUrl}}/api/v1/entregas
+Authorization: Bearer chave_invalida.segredo_invalido
+
+### Corpo com campos faltando: 422 VALIDACAO, com a lista de campos
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "codigo_pedido_externo": "{{pedido}}-INVALIDO",
+  "endereco_origem": "Porto Alegre/RS",
+  "itens": []
+}
+
+### Data prevista no passado: 422 VALIDACAO
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "codigo_pedido_externo": "{{pedido}}-PASSADO",
+  "nome_destinatario": "Fulano de Tal",
+  "endereco_origem": "Porto Alegre/RS",
+  "endereco_destino": "Recife/PE",
+  "data_prevista": "2020-01-01T10:00:00-03:00",
+  "itens": [{ "descricao": "Caixa", "quantidade": 1, "peso": 1 }]
+}
+
+### Status inválido no filtro: 422 VALIDACAO
+GET {{baseUrl}}/api/v1/entregas?status=voando
+Authorization: Bearer {{token}}
+
+### Corpo que não é JSON: 415 TIPO_NAO_SUPORTADO
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: text/plain
+
+isto não é json
+
+### JSON quebrado: 400 JSON_INVALIDO
+POST {{baseUrl}}/api/v1/entregas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "codigo_pedido_externo": "quebrado",
+
+### Entrega que não existe (ou é de outra loja): 404 NAO_ENCONTRADO
+GET {{baseUrl}}/api/v1/entregas/KV-000000
+Authorization: Bearer {{token}}
+
+### Rota que não existe: 404 ROTA_INEXISTENTE
+GET {{baseUrl}}/api/v1/qualquer-coisa
