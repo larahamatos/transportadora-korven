@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API de integração da Korven para lojas e clientes criarem e acompanharem entregas",
   "private": true,
+  "license": "PolyForm-Noncommercial-1.0.0",
   "main": "src/server.js",
   "engines": {
     "node": ">=20.6"
