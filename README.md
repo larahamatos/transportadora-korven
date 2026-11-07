@@ -12,6 +12,26 @@ Site, sistema interno e API de integração de uma transportadora.
 
 Tudo é HTML, CSS e JavaScript puros (sem build); a API usa Node.js 20+ e Express.
 
+## Equipe
+
+| Integrante | Papel |
+|---|---|
+| Lucas Harthman | Product Owner |
+| Rafael Pinheiro | Tech Leader |
+| Lucas Mariano | QA e Technical Writer |
+| Lara | Dev Front End |
+| Antônia | DBA |
+
+## Links
+
+| O quê | Endereço |
+|---|---|
+| Site | https://korven-bay.vercel.app |
+| Rastreio público | https://korven-bay.vercel.app/rastreio.html |
+| Sistema interno (login) | https://korven-bay.vercel.app/sistema/ |
+| API de integração | https://korven-api.onrender.com |
+| Documentação da API (Swagger) | https://korven-api.onrender.com/docs |
+
 ## Como rodar
 
 1. **Banco:** siga "Criar o banco do zero" em [docs/banco-de-dados.md](docs/banco-de-dados.md) (schema, seed e as chaves no front).
