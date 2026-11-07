@@ -1,8 +1,34 @@
 # Banco de dados — Korven (Supabase / PostgreSQL)
 
-Projeto **Korven** na organização Dirt Second (`sarkvqgxnwvrslawtwuy`, região us-east-1). Os scripts aplicados ficam no
-próprio projeto (Dashboard → Database → Migrations): `estrutura_entregas_itens_historico_integracao`,
-`regras_de_negocio_funcoes`, `seguranca_rls_e_permissoes` e `funcoes_da_api_de_integracao_por_token`. As tabelas `usuario`, `cliente` e `motorista` já existiam.
+Projeto Supabase PostgreSQL. Tudo o que o banco precisa está em dois arquivos de `supabase/`: **`schema.sql`**
+(tipos, tabelas, funções, RLS e permissões) e **`seed.sql`** (dados de demonstração, opcional).
+
+## Criar o banco do zero (quem clonar o repositório)
+
+1. Crie um projeto em [supabase.com](https://supabase.com) (região mais próxima de você).
+2. **SQL Editor** → cole todo o `supabase/schema.sql` e rode **uma vez**.
+3. (Opcional) Edite a senha na primeira linha útil de `supabase/seed.sql` (`v_senha`) e rode o arquivo. Ele cria as
+   contas de demonstração (`admin@korven.demo`, `operador@`, `carlos@`, `juliana@`, `anderson@`, `sergio@` e
+   `lojaverde@korven.demo`), 4 clientes, 4 motoristas e 16 entregas. Só roda em banco sem usuários.
+4. **Edge Function** (criar logins pelo sistema): instale a [CLI do Supabase](https://supabase.com/docs/guides/cli) e
+   rode `supabase functions deploy gerenciar-usuarios --project-ref SEU_REF` na raiz do projeto. Sem ela, só a tela
+   "Usuários" e a opção "criar acesso" em Clientes e Motoristas deixam de funcionar.
+5. **Ligue o front ao seu projeto**: em **Project Settings → API**, copie a *Project URL* e a chave *anon*
+   (ou *publishable*) e troque nos três lugares onde ficam: `sistema/assets/js/core/config.js`, `rastreio.js` e
+   `api/.env` (`SUPABASE_URL` e `SUPABASE_ANON_KEY`, a partir de `api/.env.example`). Não use a chave `service_role`.
+6. **Authentication** (painel do Supabase):
+   - Sign In / Providers → **User Signups** → desligue *Allow new users to sign up* (os acessos são criados pelo admin).
+     Mantenha o provedor Email ligado.
+   - URL Configuration → Site URL e Redirect URLs com o endereço em que o sistema for publicado, para o link de
+     "esqueci a senha".
+   - (Planos pagos) Password security → proteção contra senhas vazadas.
+
+Sem o seed, crie o primeiro administrador em **Authentication → Users → Add user** (marque *Auto Confirm User*) e rode:
+
+```sql
+insert into public.usuario (id, nome, perfil_acesso)
+select id, 'Seu Nome', 'admin' from auth.users where email = 'seu@email.com';
+```
 
 ## Tabelas
 
@@ -51,13 +77,6 @@ chave de serviço: listar usuários com e-mail, criar login (vinculando a client
 
 ## Dados de demonstração e acessos
 
-O banco foi populado com 4 clientes, 4 motoristas e 16 entregas em vários status. Contas de demonstração (admin,
-operador, 4 motoristas e o cliente LojaVerde) e a senha ficam em `sistema/docs/acessos-demo.txt`, que **não vai para o
-git**. Troque as senhas antes de usar com dados reais. O usuário `sistema` ("Integração Korven") é bloqueado para login e
-serve ao histórico das entregas criadas pela API.
-
-## Pendências de configuração (painel do Supabase)
-
-- Authentication → Providers → Email: desligar **Allow new users to sign up** (os acessos são criados pelo admin).
-- Authentication → URL Configuration: incluir a URL em que o sistema for publicado, para o link de "esqueci a senha".
-- Authentication → Password security: ligar a proteção contra senhas vazadas (aviso do advisor).
+O `seed.sql` cria as contas de demonstração (admin, operador, 4 motoristas e o cliente LojaVerde) com a senha que você
+definir em `v_senha`. O usuário `sistema` ("Integração Korven") é bloqueado para login e serve ao histórico das entregas
+criadas pela API. Troque as senhas antes de usar com dados reais.
