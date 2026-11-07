@@ -30,3 +30,8 @@ Tudo é HTML, CSS e JavaScript puros (sem build); a API usa Node.js 20+ e Expres
 
 O front usa só a chave pública (anon) do Supabase; a proteção dos dados é do banco (RLS e funções). Nunca coloque a
 chave `service_role` no navegador nem no repositório.
+
+## Licença
+
+[PolyForm Noncommercial 1.0.0](LICENSE): o código pode ser lido, usado e modificado para fins **não comerciais**
+(estudo, pesquisa, projetos acadêmicos, uso pessoal). Uso comercial exige autorização da equipe.
