@@ -12,7 +12,8 @@ window.Korven = window.Korven || {};
         supabaseUrl: URL,
         site: "../index.html",
         rastreio: "../rastreio.html",
-        docsApi: "../api/openapi.yaml"
+        api: "https://korven-api.onrender.com",
+        docsApi: "https://korven-api.onrender.com/docs"
     };
 
     K.sb = window.supabase.createClient(URL, CHAVE, {
