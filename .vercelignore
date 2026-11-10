@@ -1,5 +1,5 @@
 # fora do site publicado: API Node (roda à parte), documentação, banco, senhas locais e configs
-api
+/api
 docs
 supabase
 .claude
