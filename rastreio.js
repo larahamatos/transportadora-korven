@@ -5,8 +5,8 @@
 (function () {
     "use strict";
 
-    var API = "REMOVIDO/rest/v1/rpc/rastrear_publico";
-    var CHAVE = "REMOVIDO";
+    var API = ((window.KORVEN_ENV || {}).url) + "/rest/v1/rpc/rastrear_publico";
+    var CHAVE = (window.KORVEN_ENV || {}).chave;
     var ATUALIZA_A_CADA = 60000;
 
     var ETAPAS = [

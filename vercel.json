@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node scripts/gerar-env.js",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/(.*)",

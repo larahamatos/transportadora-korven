@@ -3,3 +3,7 @@ sistema/docs/acessos-demo.txt
 .env
 node_modules/
 .vercel
+
+# gerados no deploy por scripts/gerar-env.js (chaves do Supabase)
+env.js
+sistema/assets/js/core/env.js

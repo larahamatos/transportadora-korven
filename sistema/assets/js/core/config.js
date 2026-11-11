@@ -5,8 +5,8 @@ window.Korven = window.Korven || {};
 (function (K) {
     "use strict";
 
-    var URL = "REMOVIDO";
-    var CHAVE = "REMOVIDO";
+    var URL = (window.KORVEN_ENV || {}).url;
+    var CHAVE = (window.KORVEN_ENV || {}).chave;
 
     K.config = {
         supabaseUrl: URL,
